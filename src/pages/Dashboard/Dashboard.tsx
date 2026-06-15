@@ -16,22 +16,28 @@ export function Dashboard() {
       aria-labelledby={`tab-${activeDivision}`}
       className={styles.panel}
     >
-      <h1 className={styles.heading}>
-        {DIVISION_NAMES[activeDivision]}
-        <span>({activeDivision})</span>
-      </h1>
+      {/* Hero strip */}
+      <div className={styles.hero}>
+        <p className={styles.greeting}>Welcome back</p>
+        <h1 className={styles.heading}>
+          {DIVISION_NAMES[activeDivision]}
+          <span>{activeDivision}</span>
+        </h1>
+      </div>
 
-      {isLoading && <p className={styles.empty}>Loading policies…</p>}
-      {isError  && <p className={styles.empty}>Failed to load policies.</p>}
+      <div className={styles.content}>
+        {isLoading && <p className={styles.empty}>Loading policies…</p>}
+        {isError   && <p className={styles.empty}>Failed to load policies.</p>}
 
-      {!isLoading && !isError && (
-        <div className={styles.grid}>
-          {filtered.length === 0
-            ? <p className={styles.empty}>No policies in this division.</p>
-            : filtered.map(p => <PolicyCard key={p.id} policy={p} />)
-          }
-        </div>
-      )}
+        {!isLoading && !isError && (
+          <div className={styles.grid}>
+            {filtered.length === 0
+              ? <p className={styles.empty}>No policies in this division.</p>
+              : filtered.map(p => <PolicyCard key={p.id} policy={p} />)
+            }
+          </div>
+        )}
+      </div>
     </main>
   );
 }

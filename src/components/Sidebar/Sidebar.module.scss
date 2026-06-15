@@ -5,7 +5,7 @@ $breakpoint: 640px;
 
 .sidebar {
   width: $sidebar-width;
-  background: darken($navy, 4%);
+  background: $navy;
   padding-top: $space-lg;
   flex-shrink: 0;
   overflow-y: auto;
@@ -15,13 +15,13 @@ $breakpoint: 640px;
     padding-top: 0;
     overflow-y: visible;
     overflow-x: auto;
-    border-bottom: 2px solid rgba($parchment, 0.1);
+    border-bottom: 1px solid rgba($white, 0.08);
   }
 }
 
 .tabList {
   list-style: none;
-  padding: 0;
+  padding: $space-sm;
   margin: 0;
   display: flex;
   flex-direction: column;
@@ -29,44 +29,49 @@ $breakpoint: 640px;
 
   @media (max-width: $breakpoint) {
     flex-direction: row;
+    padding: 0;
     gap: 0;
-    white-space: nowrap;
   }
 }
 
 .tab {
-  position: relative;
+  display: flex;
+  align-items: center;
+  gap: $space-sm;
   cursor: pointer;
-  padding: $space-sm $space-md $space-sm ($space-md + 4px);
+  padding: 10px $space-md;
   font-family: $font-sans;
   font-size: 13px;
   font-weight: 500;
-  color: rgba($parchment, 0.7);
+  color: rgba($white, 0.6);
   border: none;
   background: none;
   width: 100%;
   text-align: left;
-  border-radius: 4px 0 0 4px;
+  border-radius: $radius-sm;
   transition: background 0.15s, color 0.15s;
-  user-select: none;
   white-space: nowrap;
 
   &:hover {
-    color: $parchment;
-    background: rgba($parchment, 0.08);
+    color: $white;
+    background: rgba($white, 0.07);
   }
 
   &[aria-selected='true'] {
-    background: $parchment;
-    color: $navy;
+    background: rgba($orange, 0.15);
+    color: $white;
     font-weight: 600;
-    box-shadow: 2px 0 0 $gold inset;
+    border-left: 3px solid $orange;
+    padding-left: calc(#{$space-md} - 3px);
 
-    .code { color: $gold; }
+    .code { color: $orange; }
 
     @media (max-width: $breakpoint) {
-      box-shadow: 0 -2px 0 $gold inset;
+      border-left: none;
+      border-bottom: 2px solid $orange;
       border-radius: 0;
+      padding-left: $space-md;
+      background: rgba($orange, 0.1);
     }
   }
 
@@ -77,12 +82,24 @@ $breakpoint: 640px;
   }
 }
 
+.icon {
+  flex-shrink: 0;
+  opacity: 0.8;
+
+  .tab[aria-selected='true'] & { opacity: 1; }
+}
+
 .code {
   font-family: $font-mono;
-  font-size: 11px;
-  font-weight: 500;
-  margin-right: $space-xs;
-  color: rgba($parchment, 0.5);
-  display: inline-block;
-  min-width: 22px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: rgba($white, 0.4);
+  min-width: 20px;
+}
+
+.label {
+  @media (max-width: $breakpoint) {
+    display: none;  // show only code on mobile
+  }
 }

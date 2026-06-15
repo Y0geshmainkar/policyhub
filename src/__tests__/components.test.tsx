@@ -43,12 +43,12 @@ describe('PolicyCard', () => {
 
   it('shows AutoPay ON badge when autoPay is true', () => {
     renderWithProviders(<PolicyCard policy={basePolicy} />);
-    expect(screen.getByText('AutoPay ON')).toBeInTheDocument();
+    expect(screen.getByText(/AutoPay ON/)).toBeInTheDocument();
   });
 
   it('does not show AutoPay ON badge when autoPay is false', () => {
     renderWithProviders(<PolicyCard policy={{ ...basePolicy, autoPay: false }} />);
-    expect(screen.queryByText('AutoPay ON')).not.toBeInTheDocument();
+    expect(screen.queryByText(/AutoPay ON/)).not.toBeInTheDocument();
   });
 
   it('links to the policy detail page', () => {

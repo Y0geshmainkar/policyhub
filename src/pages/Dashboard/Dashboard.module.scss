@@ -1,34 +1,86 @@
 @use '../../styles/tokens' as *;
+@use 'sass:color';
 
 $breakpoint: 640px;
 
 .panel {
   flex: 1;
-  padding: $space-xl;
   overflow-y: auto;
+  background: $off-white;
+}
+
+.hero {
+  background: linear-gradient(135deg, $navy 0%, color.adjust($navy, $lightness: 8%) 100%);
+  padding: $space-xl $space-xl $space-lg;
+  position: relative;
+  overflow: hidden;
+
+  // Decorative orange circle — top right
+  &::after {
+    content: '';
+    position: absolute;
+    top: -40px;
+    right: -40px;
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    background: rgba($orange, 0.15);
+    pointer-events: none;
+  }
+
+  // Second smaller circle
+  &::before {
+    content: '';
+    position: absolute;
+    bottom: -20px;
+    right: 60px;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: rgba($orange, 0.08);
+    pointer-events: none;
+  }
 
   @media (max-width: $breakpoint) {
-    padding: $space-md;
+    padding: $space-lg $space-md $space-md;
   }
+}
+
+.greeting {
+  font-family: $font-sans;
+  font-size: 13px;
+  color: rgba($white, 0.6);
+  margin-bottom: 4px;
 }
 
 .heading {
   font-family: $font-serif;
-  font-size: 24px;
-  color: $navy;
-  margin-bottom: $space-lg;
+  font-size: 22px;
+  color: $white;
+  position: relative;
+  z-index: 1;
 
   span {
     font-family: $font-mono;
-    font-size: 16px;
-    color: $slate;
+    font-size: 13px;
+    color: $orange;
     margin-left: $space-sm;
-    font-weight: 400;
+    font-weight: 600;
+    background: rgba($orange, 0.15);
+    padding: 2px 8px;
+    border-radius: 10px;
   }
 
   @media (max-width: $breakpoint) {
-    font-size: 20px;
-    margin-bottom: $space-md;
+    font-size: 18px;
+  }
+}
+
+.content {
+  padding: $space-lg $space-xl;
+
+  @media (max-width: $breakpoint) {
+    padding: $space-md;
   }
 }
 
@@ -49,6 +101,7 @@ $breakpoint: 640px;
 }
 
 .empty {
-  color: $slate;
+  color: $slate-mid;
   font-style: italic;
+  padding: $space-lg;
 }

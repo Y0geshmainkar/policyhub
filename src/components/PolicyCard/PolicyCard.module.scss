@@ -2,13 +2,13 @@
 @use 'sass:color';
 
 .card {
-  background: $paper;
-  border-radius: 8px;
+  background: $white;
+  border-radius: $radius-md;
   padding: $space-md;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  box-shadow: 0 1px 3px rgba($dark, 0.06), 0 1px 2px rgba($dark, 0.04);
   cursor: pointer;
-  border: 2px solid transparent;
-  transition: box-shadow 0.15s, border-color 0.15s;
+  border: 1.5px solid transparent;
+  transition: box-shadow 0.15s, border-color 0.15s, transform 0.15s;
   display: flex;
   flex-direction: column;
   gap: $space-sm;
@@ -16,71 +16,101 @@
   color: inherit;
 
   &:hover {
-    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+    box-shadow: 0 4px 16px rgba($dark, 0.1);
+    border-color: rgba($orange, 0.3);
+    transform: translateY(-1px);
   }
 
   &:focus-visible {
-    border-color: $gold;
+    border-color: $orange;
     outline: none;
   }
 }
 
+// Top row: division icon + badge
 .header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
   gap: $space-sm;
 }
 
-.policyId {
+.divisionChip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: $off-white;
+  padding: 4px 8px;
+  border-radius: 20px;
   font-family: $font-mono;
-  font-size: 12px;
-  font-weight: 500;
-  color: $navy;
-  letter-spacing: 0.06em;
+  font-size: 11px;
+  font-weight: 600;
+  color: $slate-mid;
+  letter-spacing: 0.04em;
 }
 
+// Insured name — primary identifier
 .insuredName {
   font-size: 14px;
-  font-weight: 600;
-  color: $navy;
+  font-weight: 700;
+  color: $dark;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
+// Plan type
 .type {
   font-size: 12px;
-  color: $slate;
+  color: $slate-mid;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
+// Policy number
+.policyId {
+  font-family: $font-mono;
+  font-size: 11px;
+  color: rgba($slate-mid, 0.7);
+  letter-spacing: 0.06em;
+}
+
+// Footer: premium + due date
 .footer {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-top: auto;
-  padding-top: $space-xs;
-  border-top: 1px solid rgba($slate, 0.15);
+  justify-content: space-between;
+  margin-top: $space-xs;
+  padding-top: $space-sm;
+  border-top: 1px solid rgba($slate-mid, 0.1);
 }
 
-.premium {
+.premiumBtn {
+  background: $orange;
+  color: $white;
   font-family: $font-mono;
-  font-size: 16px;
-  font-weight: 500;
-  color: $gold;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 6px 12px;
+  border-radius: 20px;
+  white-space: nowrap;
 }
 
 .dueDate {
-  font-size: 12px;
-  color: $slate;
+  font-size: 11px;
+  color: $slate-mid;
 }
 
 .autoPay {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
   font-size: 11px;
   color: $forest;
   font-weight: 600;
-  background: color.adjust($forest, $lightness: 50%);
-  padding: 2px 6px;
-  border-radius: 8px;
+  background: color.adjust($forest, $lightness: 48%);
+  padding: 2px 8px;
+  border-radius: 10px;
   align-self: flex-start;
 }
