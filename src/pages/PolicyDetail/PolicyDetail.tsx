@@ -1,11 +1,13 @@
 import { Link, useParams } from 'react-router-dom';
-import { useAppSelector } from '../../store/hooks';
+import { useAppSelector, useAppDispatch } from '../../store/hooks';
 import { StatusBadge } from '../../components/StatusBadge/StatusBadge';
 import { AutoPayToggle } from '../../components/AutoPayToggle/AutoPayToggle';
+import { openModal } from '../../store/paymentSlice';
 import styles from './PolicyDetail.module.scss';
 
 export function PolicyDetail() {
   const { id } = useParams<{ id: string }>();
+  const dispatch = useAppDispatch();
   const policy = useAppSelector(s => s.policies.policies.find(p => p.id === id));
 
   if (!policy) {
@@ -55,6 +57,15 @@ export function PolicyDetail() {
             <AutoPayToggle policyId={policy.id} checked={policy.autoPay} />
           </div>
         </div>
+
+        <button
+          className={styles.makePaymentBtn}
+          onClick={() => dispatch(openModal(policy.id))}
+          disabled={policy.status === 'active' && !policy.paymentHistory.length}
+          aria-label={`Make a payment for policy ${policy.id}`}
+        >
+          Make a Payment
+        </button>
 
         {/* Payment History */}
         <section className={styles.section} aria-label="Payment history">

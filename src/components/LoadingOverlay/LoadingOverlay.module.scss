@@ -1,0 +1,32 @@
+@use '../../styles/tokens' as *;
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba($navy, 0.5);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  gap: $space-md;
+}
+
+.spinner {
+  width: 44px;
+  height: 44px;
+  border: 4px solid rgba($parchment, 0.3);
+  border-top-color: $gold;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+.message {
+  color: $parchment;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

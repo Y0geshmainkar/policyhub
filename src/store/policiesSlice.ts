@@ -10,7 +10,7 @@ interface PoliciesState {
 
 const initialState: PoliciesState = {
   policies: mockPolicies,
-  activeDivision: 'GL',
+  activeDivision: (sessionStorage.getItem('activeDivision') as Division) || 'GL',
   selectedPolicyId: null,
 };
 
@@ -20,6 +20,7 @@ const policiesSlice = createSlice({
   reducers: {
     setActiveDivision(state, action: PayloadAction<Division>) {
       state.activeDivision = action.payload;
+      sessionStorage.setItem('activeDivision', action.payload);
     },
     setSelectedPolicyId(state, action: PayloadAction<string | null>) {
       state.selectedPolicyId = action.payload;
@@ -28,8 +29,12 @@ const policiesSlice = createSlice({
       const policy = state.policies.find(p => p.id === action.payload);
       if (policy) policy.autoPay = !policy.autoPay;
     },
+    updatePolicyStatus(state, action: PayloadAction<{ id: string; status: import('../types/policy').PolicyStatus }>) {
+      const policy = state.policies.find(p => p.id === action.payload.id);
+      if (policy) policy.status = action.payload.status;
+    },
   },
 });
 
-export const { setActiveDivision, setSelectedPolicyId, toggleAutoPay } = policiesSlice.actions;
+export const { setActiveDivision, setSelectedPolicyId, toggleAutoPay, updatePolicyStatus } = policiesSlice.actions;
 export default policiesSlice.reducer;

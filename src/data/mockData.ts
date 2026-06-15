@@ -64,9 +64,9 @@ const PAYMENT_HISTORY: Record<string, import('../types/policy').PaymentRecord[]>
     { date: '2026-04-16', amount: 24.00, method: 'Bank Draft', status: 'paid' },
   ],
   '4098658': [
-    { date: '2026-06-22', amount: 9.37,  method: 'Direct Bill', status: 'paid' },
-    { date: '2026-05-22', amount: 9.37,  method: 'Direct Bill', status: 'paid' },
-    { date: '2026-04-22', amount: 9.37,  method: 'Direct Bill', status: 'failed' },
+    { date: '2026-06-22', amount: 9.37, method: 'Direct Bill', status: 'paid' },
+    { date: '2026-05-22', amount: 9.37, method: 'Direct Bill', status: 'paid' },
+    { date: '2026-04-22', amount: 9.37, method: 'Direct Bill', status: 'failed' },
   ],
   '371716986': [
     { date: '2026-04-23', amount: 19.88, method: 'Direct Bill', status: 'pending' },

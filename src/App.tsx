@@ -3,6 +3,8 @@ import { Header } from './components/Header/Header';
 import { Sidebar } from './components/Sidebar/Sidebar';
 import { Dashboard } from './pages/Dashboard/Dashboard';
 import { PolicyDetail } from './pages/PolicyDetail/PolicyDetail';
+import { PaymentModal } from './components/PaymentModal/PaymentModal';
+import { LoadingOverlay } from './components/LoadingOverlay/LoadingOverlay';
 import styles from './App.module.scss';
 
 function App() {
@@ -16,6 +18,8 @@ function App() {
           <Route path="/policy/:id" element={<PolicyDetail />} />
         </Routes>
       </div>
+      <PaymentModal />
+      <LoadingOverlay />
     </div>
   );
 }

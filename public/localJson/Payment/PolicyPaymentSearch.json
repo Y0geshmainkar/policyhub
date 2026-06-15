@@ -1,0 +1,17 @@
+{
+  "success": true,
+  "statusCode": 1,
+  "message": "Query was success.",
+  "data": {
+    "policyPremiums": [
+      { "term": 1, "amount": 13.50, "description": "1 month - $13.50" },
+      { "term": 3, "amount": 39.76, "description": "3 months - $39.76" },
+      { "term": 6, "amount": 78.00, "description": "6 months - $78.00" },
+      { "term": 12, "amount": 150.00, "description": "12 months - $150.00" }
+    ],
+    "allowPayment": true,
+    "isPastDue": true,
+    "paymentRestricted": false,
+    "pendingPayment": false
+  }
+}
