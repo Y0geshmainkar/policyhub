@@ -34,6 +34,8 @@ export function Header({ onMenuClick }: Props) {
         </span>
         <LogoIcon />
       </Link>
+
+      <Link to="/register" className={styles.registerBtn}>Register</Link>
     </header>
   );
 }

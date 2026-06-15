@@ -1,0 +1,220 @@
+@use '../../styles/tokens' as *;
+
+.page {
+  min-height: 100vh;
+  background: $off-white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: $space-md;
+
+  @media (max-width: 480px) {
+    align-items: flex-start;
+    padding: $space-sm;
+  }
+}
+
+.card {
+  background: $white;
+  border-radius: $radius-lg;
+  box-shadow: $shadow-modal;
+  padding: $space-xl;
+  width: 100%;
+  max-width: 480px;
+
+  @media (max-width: 480px) {
+    padding: $space-lg $space-md;
+    border-radius: $radius-md;
+    margin-top: $space-lg;
+    box-shadow: $shadow-card;
+  }
+}
+
+// ── Stepper ────────────────────────────────────────────────────────────────
+.stepper {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  margin-bottom: $space-xl;
+}
+
+.stepItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  flex: 1;
+
+  &:not(:last-child) {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+}
+
+.stepCircle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid $border-color;
+  background: $white;
+  color: $slate-mid;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: $font-sans;
+  flex-shrink: 0;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+}
+
+.stepLabel {
+  font-size: 11px;
+  font-family: $font-sans;
+  color: $slate-mid;
+  margin-top: $space-xs;
+  white-space: nowrap;
+  position: absolute;
+  top: 36px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.stepLine {
+  flex: 1;
+  height: 2px;
+  background: $border-color;
+  margin-top: 15px;
+  transition: background 0.2s;
+}
+
+.active {
+  .stepCircle { background: $orange; border-color: $orange; color: $white; }
+  .stepLabel  { color: $orange; font-weight: 600; }
+}
+
+.done {
+  .stepCircle { background: $forest; border-color: $forest; color: $white; }
+  .stepLine   { background: $forest; }
+  .stepLabel  { color: $forest; }
+}
+
+// ── Form layout ────────────────────────────────────────────────────────────
+.stepTitle {
+  font-family: $font-serif;
+  font-size: 22px;
+  color: $dark;
+  margin: $space-lg 0 $space-md;
+  text-align: center;
+}
+
+.fields {
+  display: flex;
+  flex-direction: column;
+  gap: $space-md;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $space-md;
+
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: $space-sm;
+  margin-top: $space-lg;
+
+  @media (max-width: 480px) {
+    flex-direction: column-reverse;
+    button { width: 100%; }
+  }
+}
+
+// ── Password strength bar ─────────────────────────────────────────────────
+.strengthBar {
+  display: flex;
+  align-items: center;
+  gap: $space-sm;
+  margin-top: $space-xs;
+  height: 4px;
+  background: $border-color;
+  border-radius: $radius-pill;
+  overflow: hidden;
+  position: relative;
+}
+
+.strengthFill {
+  height: 100%;
+  border-radius: $radius-pill;
+  transition: width 0.3s, background 0.3s;
+  &.strength1 { width: 33%; background: $rust; }
+  &.strength2 { width: 66%; background: $orange; }
+  &.strength3 { width: 100%; background: $forest; }
+}
+
+.strengthLabel {
+  position: absolute;
+  right: 0;
+  top: 6px;
+  font-size: 11px;
+  font-family: $font-sans;
+  color: $slate-mid;
+}
+
+// ── Summary (step 3) ───────────────────────────────────────────────────────
+.summary {
+  background: $off-white;
+  border-radius: $radius-md;
+  padding: $space-md;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: $space-xs $space-md;
+  margin-bottom: $space-md;
+
+  dt {
+    font-size: 12px;
+    font-weight: 600;
+    color: $slate-mid;
+    font-family: $font-sans;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    align-self: center;
+  }
+
+  dd {
+    font-size: 14px;
+    color: $dark;
+    font-family: $font-sans;
+    margin: 0;
+  }
+}
+
+// ── Success ────────────────────────────────────────────────────────────────
+.successIcon {
+  width: 56px;
+  height: 56px;
+  background: $forest;
+  color: $white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  margin: 0 auto $space-md;
+}
+
+// ── Misc ───────────────────────────────────────────────────────────────────
+.hint {
+  text-align: center;
+  font-size: 13px;
+  color: $slate-mid;
+  margin-top: $space-md;
+
+  a { color: $orange; text-decoration: none; font-weight: 500; }
+}

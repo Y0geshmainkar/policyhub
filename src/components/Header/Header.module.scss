@@ -92,3 +92,20 @@
   align-items: center;
   gap: $space-sm;
 }
+
+.registerBtn {
+  margin-left: $space-md;
+  padding: 6px $space-md;
+  background: $orange;
+  color: $white;
+  border-radius: $radius-pill;
+  font-family: $font-sans;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  flex-shrink: 0;
+
+  &:hover { opacity: 0.88; }
+  &:focus-visible { outline: $focus-outline; outline-offset: $focus-outline-offset; }
+}
