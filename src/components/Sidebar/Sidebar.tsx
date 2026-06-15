@@ -29,6 +29,7 @@ export function Sidebar() {
 
   return (
     <nav className={styles.sidebar} aria-label="Divisions">
+      <span className={styles.sectionLabel}>Divisions</span>
       <ul role="tablist" aria-orientation="vertical" className={styles.tabList}>
         {DIVISIONS.map((div, i) => (
           <li key={div} role="presentation">

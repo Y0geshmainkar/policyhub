@@ -13,6 +13,7 @@ $breakpoint: 640px;
   display: flex;
   flex: 1;
   overflow: hidden;
+  background: $off-white;
 
   @media (max-width: $breakpoint) {
     flex-direction: column;

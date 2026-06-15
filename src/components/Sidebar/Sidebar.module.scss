@@ -5,29 +5,47 @@ $breakpoint: 640px;
 
 .sidebar {
   width: $sidebar-width;
-  background: $navy;
-  padding-top: $space-sm;
+  background: $white;
+  border-right: 1px solid $border-color;
+  padding-top: $space-md;
   flex-shrink: 0;
   overflow-y: auto;
-  border-right: 1px solid rgba($white, 0.06);
+  display: flex;
+  flex-direction: column;
 
   @media (max-width: $breakpoint) {
     width: 100%;
     padding-top: 0;
+    flex-direction: row;
     overflow-y: visible;
     overflow-x: auto;
     border-right: none;
-    border-bottom: 1px solid rgba($white, 0.08);
+    border-bottom: 1px solid $border-color;
+  }
+}
+
+// Section label like "INSURANCE" in TallyPrime
+.sectionLabel {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: $slate-mid;
+  padding: $space-sm $space-md $space-xs;
+  margin-top: $space-sm;
+
+  @media (max-width: $breakpoint) {
+    display: none;
   }
 }
 
 .tabList {
   list-style: none;
-  padding: $space-sm;
+  padding: 0 $space-sm;
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 1px;
 
   @media (max-width: $breakpoint) {
     flex-direction: row;
@@ -41,39 +59,39 @@ $breakpoint: 640px;
   align-items: center;
   gap: 10px;
   cursor: pointer;
-  padding: 10px $space-md;
+  padding: 9px $space-md;
   font-family: $font-sans;
   font-size: 13px;
   font-weight: 500;
-  color: rgba($white, 0.5);
+  color: $slate-mid;
   border: none;
   background: transparent;
   width: 100%;
   text-align: left;
   border-radius: $radius-sm;
-  transition: background 0.15s, color 0.15s;
+  transition: background 0.12s, color 0.12s;
   white-space: nowrap;
 
   &:hover:not([aria-selected='true']) {
-    color: rgba($white, 0.85);
-    background: rgba($white, 0.06);
+    background: $off-white;
+    color: $dark;
   }
 
-  // ── Active state: solid orange bg, white text, icon visible ──────────────
+  // Active: light orange bg + orange text + left orange bar (TallyPrime pattern)
   &[aria-selected='true'] {
-    background: $orange;
-    color: $white;
+    background: rgba($orange, 0.08);
+    color: $orange;
     font-weight: 600;
+    box-shadow: inset 3px 0 0 $orange;
 
-    .code {
-      color: rgba($white, 0.75);
-    }
+    .code   { color: $orange; }
+    .icon   { color: $orange; }
 
     @media (max-width: $breakpoint) {
-      background: transparent;
+      box-shadow: none;
       border-bottom: 2px solid $orange;
+      background: rgba($orange, 0.06);
       border-radius: 0;
-      color: $white;
     }
   }
 
@@ -86,11 +104,8 @@ $breakpoint: 640px;
 
 .icon {
   flex-shrink: 0;
-
-  // Inactive: dim icon
-  .tab:not([aria-selected='true']) & {
-    opacity: 0.5;
-  }
+  color: $slate-mid;
+  transition: color 0.12s;
 }
 
 .code {
@@ -98,8 +113,9 @@ $breakpoint: 640px;
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.08em;
-  color: rgba($white, 0.3);
+  color: rgba($slate-mid, 0.6);
   min-width: 20px;
+  transition: color 0.12s;
 }
 
 .label {
