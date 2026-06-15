@@ -1,5 +1,33 @@
 @use '../../styles/tokens' as *;
 
+.menuBtn {
+  display: none;
+  background: none;
+  border: none;
+  color: $dark;
+  cursor: pointer;
+  padding: $space-xs;
+  border-radius: $radius-sm;
+  z-index: 201;
+  position: relative;
+  flex-shrink: 0;
+
+  &:hover { background: $off-white; }
+  &:focus-visible { outline: $focus-outline; outline-offset: $focus-outline-offset; }
+
+  @media (max-width: 768px) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+// Logo always pushed to right
+.logoRight {
+  margin-left: auto;
+}
+
+
 .header {
   height: $header-height;
   background: $white;

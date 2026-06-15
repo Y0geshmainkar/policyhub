@@ -1,6 +1,6 @@
 @use './styles/tokens' as *;
 
-$breakpoint: 640px;
+$breakpoint: 768px;
 
 .layout {
   display: flex;
@@ -13,9 +13,38 @@ $breakpoint: 640px;
   display: flex;
   flex: 1;
   overflow: hidden;
-  background: $off-white;
+}
+
+// Desktop sidebar wrapper — always visible
+.sidebarWrap {
+  height: 100%;
 
   @media (max-width: $breakpoint) {
-    flex-direction: column;
+    position: fixed;
+    top: $header-height;
+    left: 0;
+    bottom: 0;
+    height: calc(100vh - #{$header-height});
+    z-index: 200;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+    box-shadow: 4px 0 16px rgba($dark, 0.12);
+
+    &.drawerOpen {
+      transform: translateX(0);
+    }
+  }
+}
+
+// Backdrop when drawer is open
+.drawerBackdrop {
+  display: none;
+
+  @media (max-width: $breakpoint) {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 199;
+    background: rgba($dark, 0.4);
   }
 }

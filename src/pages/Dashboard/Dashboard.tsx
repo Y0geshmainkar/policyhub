@@ -26,10 +26,10 @@ export function Dashboard() {
   const activeDivision = useAppSelector(s => s.policies.activeDivision);
   const { data: policies = [], isLoading, isError } = usePolicies();
 
-  const filtered   = policies.filter(p => p.division === activeDivision);
-  const activeCount = filtered.filter(p => p.status === 'active').length;
-  const dueCount    = filtered.filter(p => p.status === 'due').length;
-  const totalPremium = filtered.reduce((s, p) => s + p.premium, 0);
+  const filtered      = policies.filter(p => p.division === activeDivision);
+  const activeCount   = filtered.filter(p => p.status === 'active').length;
+  const dueCount      = filtered.filter(p => p.status === 'due').length;
+  const totalPremium  = filtered.reduce((s, p) => s + p.premium, 0);
 
   return (
     <main
@@ -38,13 +38,12 @@ export function Dashboard() {
       aria-labelledby={`tab-${activeDivision}`}
       className={styles.panel}
     >
-      {/* Page header — plain, no dark bg */}
       <div className={styles.pageHeader}>
         <h1 className={styles.pageTitle}>Dashboard</h1>
         <p className={styles.pageSubtitle}>Welcome back. Here's your {DIVISION_NAMES[activeDivision]} overview.</p>
       </div>
 
-      {/* Stat cards */}
+      {/* Stat cards — only when data loaded and division has policies */}
       {!isLoading && !isError && filtered.length > 0 && (
         <div className={styles.statsRow}>
           <div className={styles.statCard}>
@@ -53,30 +52,18 @@ export function Dashboard() {
               <span className={styles.statValue}>${totalPremium.toFixed(0)}</span>
               <span className={styles.statSub}>combined/mo</span>
             </div>
-            <div className={`${styles.statIcon} ${styles.orange}`}>
-              <TrendIcon />
-            </div>
+            <div className={`${styles.statIcon} ${styles.orange}`}><TrendIcon /></div>
           </div>
-          <div className={styles.statCard}>
-            <div className={styles.statInfo}>
-              <span className={styles.statLabel}>Monthly Premium</span>
-              <span className={styles.statValue}>${totalPremium.toFixed(0)}</span>
-              <span className={styles.statSub}>combined/mo</span>
-            </div>
-            <div className={`${styles.statIcon} ${styles.orange}`}>
-              <TrendIcon />
-            </div>
-          </div>
+
           <div className={styles.statCard}>
             <div className={styles.statInfo}>
               <span className={styles.statLabel}>Active Policies</span>
               <span className={styles.statValue}>{activeCount}</span>
               <span className={styles.statSub}>of {filtered.length} total</span>
             </div>
-            <div className={`${styles.statIcon} ${styles.green}`}>
-              <ShieldStatIcon />
-            </div>
+            <div className={`${styles.statIcon} ${styles.green}`}><ShieldStatIcon /></div>
           </div>
+
           {dueCount > 0 && (
             <div className={styles.statCard}>
               <div className={styles.statInfo}>
@@ -84,15 +71,12 @@ export function Dashboard() {
                 <span className={styles.statValue}>{dueCount}</span>
                 <span className={styles.statSub}>action required</span>
               </div>
-              <div className={`${styles.statIcon} ${styles.red}`}>
-                <AlertStatIcon />
-              </div>
+              <div className={`${styles.statIcon} ${styles.red}`}><AlertStatIcon /></div>
             </div>
           )}
         </div>
       )}
 
-      {/* Division policies */}
       <div className={styles.sectionHeading}>
         {DIVISION_NAMES[activeDivision]}
         <span>{activeDivision}</span>
