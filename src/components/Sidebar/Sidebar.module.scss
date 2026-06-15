@@ -6,15 +6,17 @@ $breakpoint: 640px;
 .sidebar {
   width: $sidebar-width;
   background: $navy;
-  padding-top: $space-lg;
+  padding-top: $space-sm;
   flex-shrink: 0;
   overflow-y: auto;
+  border-right: 1px solid rgba($white, 0.06);
 
   @media (max-width: $breakpoint) {
     width: 100%;
     padding-top: 0;
     overflow-y: visible;
     overflow-x: auto;
+    border-right: none;
     border-bottom: 1px solid rgba($white, 0.08);
   }
 }
@@ -37,41 +39,41 @@ $breakpoint: 640px;
 .tab {
   display: flex;
   align-items: center;
-  gap: $space-sm;
+  gap: 10px;
   cursor: pointer;
   padding: 10px $space-md;
   font-family: $font-sans;
   font-size: 13px;
   font-weight: 500;
-  color: rgba($white, 0.6);
+  color: rgba($white, 0.5);
   border: none;
-  background: none;
+  background: transparent;
   width: 100%;
   text-align: left;
   border-radius: $radius-sm;
   transition: background 0.15s, color 0.15s;
   white-space: nowrap;
 
-  &:hover {
-    color: $white;
-    background: rgba($white, 0.07);
+  &:hover:not([aria-selected='true']) {
+    color: rgba($white, 0.85);
+    background: rgba($white, 0.06);
   }
 
+  // ── Active state: solid orange bg, white text, icon visible ──────────────
   &[aria-selected='true'] {
-    background: rgba($orange, 0.15);
+    background: $orange;
     color: $white;
     font-weight: 600;
-    border-left: 3px solid $orange;
-    padding-left: calc(#{$space-md} - 3px);
 
-    .code { color: $orange; }
+    .code {
+      color: rgba($white, 0.75);
+    }
 
     @media (max-width: $breakpoint) {
-      border-left: none;
+      background: transparent;
       border-bottom: 2px solid $orange;
       border-radius: 0;
-      padding-left: $space-md;
-      background: rgba($orange, 0.1);
+      color: $white;
     }
   }
 
@@ -84,22 +86,24 @@ $breakpoint: 640px;
 
 .icon {
   flex-shrink: 0;
-  opacity: 0.8;
 
-  .tab[aria-selected='true'] & { opacity: 1; }
+  // Inactive: dim icon
+  .tab:not([aria-selected='true']) & {
+    opacity: 0.5;
+  }
 }
 
 .code {
   font-family: $font-mono;
   font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  color: rgba($white, 0.4);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: rgba($white, 0.3);
   min-width: 20px;
 }
 
 .label {
   @media (max-width: $breakpoint) {
-    display: none;  // show only code on mobile
+    display: none;
   }
 }

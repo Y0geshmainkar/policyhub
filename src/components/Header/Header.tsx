@@ -11,7 +11,9 @@ export function Header() {
           Policy<span>Hub</span>
         </span>
       </Link>
-      <span className={styles.tagline}>Insurance Self-Service Portal</span>
+      <span className={styles.divider} aria-hidden />
+      <span className={styles.tagline}>Insurance Self-Service</span>
+      <nav className={styles.nav} aria-label="Header navigation" />
     </header>
   );
 }

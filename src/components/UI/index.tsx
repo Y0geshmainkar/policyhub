@@ -103,3 +103,30 @@ export function Button({
     </button>
   );
 }
+
+
+// ── Alert / Banner ────────────────────────────────────────────────────────
+import alertStyles from './Alert.module.scss';
+
+type AlertVariant = 'warning' | 'info' | 'error' | 'success';
+
+const ALERT_ICONS: Record<AlertVariant, string> = {
+  warning: '⚠',
+  info:    'ℹ',
+  error:   '✕',
+  success: '✓',
+};
+
+interface AlertProps {
+  variant?: AlertVariant;
+  children: React.ReactNode;
+}
+
+export function Alert({ variant = 'warning', children }: AlertProps) {
+  return (
+    <div className={`${alertStyles.alert} ${alertStyles[variant]}`} role="alert">
+      <span className={alertStyles.icon} aria-hidden>{ALERT_ICONS[variant]}</span>
+      {children}
+    </div>
+  );
+}
