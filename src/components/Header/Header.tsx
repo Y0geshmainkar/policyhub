@@ -24,10 +24,11 @@ export function Header({ onMenuClick }: Props) {
         <HamburgerIcon />
       </button>
 
-      <span className={styles.tagline}>Insurance Self-Service</span>
+      
 
       {/* Logo right */}
-      <Link to="/" className={`${styles.logo} ${styles.logoRight}`} aria-label="PolicyHub home">
+      <Link to="/" className={`${styles.logo} ${styles.logoRight}`} aria-label="PolicyHub home" onClick={() => window.location.reload()}>
+      <span className={styles.tagline}>Insurance Self-Service</span> |
         <span className={styles.logoText}>
           Policy<span>Hub</span>
         </span>
