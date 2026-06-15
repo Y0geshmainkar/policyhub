@@ -1,0 +1,42 @@
+@use '../../styles/tokens' as *;
+@use 'sass:color';
+
+.alert {
+  display: flex;
+  align-items: flex-start;
+  gap: $space-sm;
+  padding: $space-sm $space-md;
+  border-radius: $radius-sm;
+  font-size: 13px;
+  font-weight: 500;
+  border: 1px solid transparent;
+
+  &.warning {
+    background: color.adjust(#F5A623, $lightness: 42%);
+    border-color: color.adjust(#F5A623, $lightness: 28%);
+    color: color.adjust(#F5A623, $lightness: -30%);
+  }
+
+  &.info {
+    background: color.adjust(#3B82F6, $lightness: 42%);
+    border-color: color.adjust(#3B82F6, $lightness: 28%);
+    color: color.adjust(#3B82F6, $lightness: -20%);
+  }
+
+  &.error {
+    background: color.adjust($rust, $lightness: 38%);
+    border-color: color.adjust($rust, $lightness: 24%);
+    color: $rust;
+  }
+
+  &.success {
+    background: color.adjust($forest, $lightness: 48%);
+    border-color: color.adjust($forest, $lightness: 34%);
+    color: $forest;
+  }
+}
+
+.icon {
+  flex-shrink: 0;
+  margin-top: 1px;
+}

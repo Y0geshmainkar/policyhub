@@ -2,16 +2,17 @@
 @use 'sass:color';
 
 .badge {
-  display: inline-block;
-  padding: 2px 8px;
-  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px 3px 4px;
+  border-radius: 20px;
   font-size: 11px;
   font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+  white-space: nowrap;
 
   &.active {
-    background: color.adjust($forest, $lightness: 50%);
+    background: color.adjust($forest, $lightness: 48%);
     color: $forest;
   }
   &.due {
@@ -19,7 +20,7 @@
     color: $rust;
   }
   &.lapsed {
-    background: color.adjust($slate, $lightness: 42%);
-    color: $slate;
+    background: rgba($slate-mid, 0.12);
+    color: $slate-mid;
   }
 }

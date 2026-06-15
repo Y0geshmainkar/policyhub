@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Division, DIVISION_NAMES, DIVISIONS } from '../../types/policy';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { setActiveDivision } from '../../store/policiesSlice';
+import { DIVISION_ICONS } from '../icons/Icons';
 import styles from './Sidebar.module.scss';
 
 export function Sidebar() {
@@ -28,6 +29,7 @@ export function Sidebar() {
 
   return (
     <nav className={styles.sidebar} aria-label="Divisions">
+      <span className={styles.sectionLabel}>Divisions</span>
       <ul role="tablist" aria-orientation="vertical" className={styles.tabList}>
         {DIVISIONS.map((div, i) => (
           <li key={div} role="presentation">
@@ -42,8 +44,9 @@ export function Sidebar() {
               onClick={() => handleSelect(div)}
               onKeyDown={e => handleKeyDown(e, i)}
             >
+              <span className={styles.icon}>{DIVISION_ICONS[div]}</span>
               <span className={styles.code}>{div}</span>
-              {DIVISION_NAMES[div]}
+              <span className={styles.label}>{DIVISION_NAMES[div]}</span>
             </button>
           </li>
         ))}

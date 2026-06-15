@@ -5,6 +5,7 @@ import {
 } from '../../store/paymentSlice';
 import { updatePolicyStatus } from '../../store/policiesSlice';
 import { usePaymentCC, usePaymentBank } from '../../hooks/usePayment';
+import { CreditCardIcon, BankIcon } from '../icons/Icons';
 import { CreditCardForm, type CCFormValues } from './CreditCardForm';
 import { BankDraftForm, type BankFormValues } from './BankDraftForm';
 import styles from './PaymentModal.module.scss';
@@ -84,11 +85,15 @@ export function PaymentModal() {
         ) : (
           <>
             <div className={styles.tabs} role="tablist">
-              {(['CC', 'Bank'] as const).map(t => (
-                <button key={t} role="tab" aria-selected={paymentType === t}
-                  className={`${styles.tab} ${paymentType === t ? styles.active : ''}`}
-                  onClick={() => dispatch(setPaymentType(t))}>
-                  {t === 'CC' ? '💳 Credit / Debit' : '🏦 Bank Draft'}
+              {([
+                { key: 'CC',   icon: <CreditCardIcon />, label: 'Credit / Debit' },
+                { key: 'Bank', icon: <BankIcon />,       label: 'Bank Draft' },
+              ] as const).map(t => (
+                <button key={t.key} role="tab" aria-selected={paymentType === t.key}
+                  className={`${styles.tab} ${paymentType === t.key ? styles.active : ''}`}
+                  onClick={() => dispatch(setPaymentType(t.key))}>
+                  {t.icon}
+                  {t.label}
                 </button>
               ))}
             </div>

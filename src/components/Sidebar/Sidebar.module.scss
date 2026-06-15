@@ -5,67 +5,92 @@ $breakpoint: 640px;
 
 .sidebar {
   width: $sidebar-width;
-  background: darken($navy, 4%);
-  padding-top: $space-lg;
+  background: $white;
+  border-right: 1px solid $border-color;
+  padding-top: $space-md;
   flex-shrink: 0;
   overflow-y: auto;
+  display: flex;
+  flex-direction: column;
 
   @media (max-width: $breakpoint) {
     width: 100%;
     padding-top: 0;
+    flex-direction: row;
     overflow-y: visible;
     overflow-x: auto;
-    border-bottom: 2px solid rgba($parchment, 0.1);
+    border-right: none;
+    border-bottom: 1px solid $border-color;
+  }
+}
+
+// Section label like "INSURANCE" in TallyPrime
+.sectionLabel {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: $slate-mid;
+  padding: $space-sm $space-md $space-xs;
+  margin-top: $space-sm;
+
+  @media (max-width: $breakpoint) {
+    display: none;
   }
 }
 
 .tabList {
   list-style: none;
-  padding: 0;
+  padding: 0 $space-sm;
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 1px;
 
   @media (max-width: $breakpoint) {
     flex-direction: row;
+    padding: 0;
     gap: 0;
-    white-space: nowrap;
   }
 }
 
 .tab {
-  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
   cursor: pointer;
-  padding: $space-sm $space-md $space-sm ($space-md + 4px);
+  padding: 9px $space-md;
   font-family: $font-sans;
   font-size: 13px;
   font-weight: 500;
-  color: rgba($parchment, 0.7);
+  color: $slate-mid;
   border: none;
-  background: none;
+  background: transparent;
   width: 100%;
   text-align: left;
-  border-radius: 4px 0 0 4px;
-  transition: background 0.15s, color 0.15s;
-  user-select: none;
+  border-radius: $radius-sm;
+  transition: background 0.12s, color 0.12s;
   white-space: nowrap;
 
-  &:hover {
-    color: $parchment;
-    background: rgba($parchment, 0.08);
+  &:hover:not([aria-selected='true']) {
+    background: $off-white;
+    color: $dark;
   }
 
+  // Active: light orange bg + orange text + left orange bar (TallyPrime pattern)
   &[aria-selected='true'] {
-    background: $parchment;
-    color: $navy;
+    background: rgba($orange, 0.08);
+    color: $orange;
     font-weight: 600;
-    box-shadow: 2px 0 0 $gold inset;
+    box-shadow: inset 3px 0 0 $orange;
 
-    .code { color: $gold; }
+    .code   { color: $orange; }
+    .icon   { color: $orange; }
 
     @media (max-width: $breakpoint) {
-      box-shadow: 0 -2px 0 $gold inset;
+      box-shadow: none;
+      border-bottom: 2px solid $orange;
+      background: rgba($orange, 0.06);
       border-radius: 0;
     }
   }
@@ -77,12 +102,24 @@ $breakpoint: 640px;
   }
 }
 
+.icon {
+  flex-shrink: 0;
+  color: $slate-mid;
+  transition: color 0.12s;
+}
+
 .code {
   font-family: $font-mono;
-  font-size: 11px;
-  font-weight: 500;
-  margin-right: $space-xs;
-  color: rgba($parchment, 0.5);
-  display: inline-block;
-  min-width: 22px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: rgba($slate-mid, 0.6);
+  min-width: 20px;
+  transition: color 0.12s;
+}
+
+.label {
+  @media (max-width: $breakpoint) {
+    display: none;
+  }
 }

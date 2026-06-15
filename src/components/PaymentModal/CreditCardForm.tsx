@@ -1,92 +1,68 @@
 import { useState } from 'react';
-import styles from './PaymentForm.module.scss';
+import { FormField, Input, Button } from '../UI';
 
 export interface CCFormValues {
   cardholderName: string;
-  cardNumber: string;  // formatted display only — last4 extracted for storage
+  cardNumber: string;
   expiry: string;
   cvv: string;
-}
-
-interface Props {
-  onSubmit: (values: CCFormValues) => void;
-  disabled?: boolean;
 }
 
 const formatCardNumber = (v: string) =>
   v.replace(/\D/g, '').slice(0, 16).replace(/(.{4})/g, '$1 ').trim();
 
 const formatExpiry = (v: string) => {
-  const digits = v.replace(/\D/g, '').slice(0, 4);
-  return digits.length > 2 ? `${digits.slice(0, 2)}/${digits.slice(2)}` : digits;
+  const d = v.replace(/\D/g, '').slice(0, 4);
+  return d.length > 2 ? `${d.slice(0, 2)}/${d.slice(2)}` : d;
 };
 
-export function CreditCardForm({ onSubmit, disabled }: Props) {
-  const [values, setValues] = useState<CCFormValues>({ cardholderName: '', cardNumber: '', expiry: '', cvv: '' });
-  const [errors, setErrors] = useState<Partial<CCFormValues>>({});
+export function CreditCardForm({ onSubmit, disabled }: { onSubmit: (v: CCFormValues) => void; disabled?: boolean }) {
+  const [v, setV] = useState<CCFormValues>({ cardholderName: '', cardNumber: '', expiry: '', cvv: '' });
+  const [e, setE] = useState<Partial<CCFormValues>>({});
 
-  const set = (field: keyof CCFormValues, val: string) =>
-    setValues(prev => ({ ...prev, [field]: val }));
+  const set = (f: keyof CCFormValues, val: string) => setV(p => ({ ...p, [f]: val }));
 
-  const validate = (): boolean => {
-    const e: Partial<CCFormValues> = {};
-    if (!values.cardholderName.trim()) e.cardholderName = 'Required';
-    if (values.cardNumber.replace(/\s/g, '').length < 16) e.cardNumber = 'Enter 16-digit card number';
-    const [mm, yy] = (values.expiry || '').split('/');
-    if (!mm || !yy || +mm < 1 || +mm > 12 || yy.length < 2) e.expiry = 'Enter valid MM/YY';
-    if (values.cvv.length < 3) e.cvv = 'Enter 3-digit CVV';
-    setErrors(e);
-    return Object.keys(e).length === 0;
+  const validate = () => {
+    const err: Partial<CCFormValues> = {};
+    if (!v.cardholderName.trim()) err.cardholderName = 'Required';
+    if (v.cardNumber.replace(/\s/g, '').length < 16) err.cardNumber = 'Enter 16-digit card number';
+    const [mm, yy] = (v.expiry || '').split('/');
+    if (!mm || !yy || +mm < 1 || +mm > 12 || yy.length < 2) err.expiry = 'Enter valid MM/YY';
+    if (v.cvv.length < 3) err.cvv = 'Enter 3-digit CVV';
+    setE(err);
+    return Object.keys(err).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (validate()) onSubmit(values);
+  const handleSubmit = (ev: React.FormEvent) => {
+    ev.preventDefault();
+    if (validate()) onSubmit(v);
   };
 
   return (
-    <form className={styles.form} onSubmit={handleSubmit} noValidate>
-      <div className={styles.field}>
-        <label className={styles.label}>Name on Card</label>
-        <input className={`${styles.input} ${errors.cardholderName ? styles.error : ''}`}
-          type="text" placeholder="JOHN SMITH" maxLength={60}
-          value={values.cardholderName}
-          onChange={e => set('cardholderName', e.target.value)} />
-        {errors.cardholderName && <span className={styles.errorMsg}>{errors.cardholderName}</span>}
-      </div>
+    <form onSubmit={handleSubmit} noValidate style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+      <FormField label="Name on Card" required error={e.cardholderName}>
+        <Input placeholder="JOHN SMITH" maxLength={60}
+          value={v.cardholderName} error={!!e.cardholderName}
+          onChange={ev => set('cardholderName', ev.target.value)} />
+      </FormField>
 
-      <div className={styles.field}>
-        <label className={styles.label}>Card Number</label>
-        <input className={`${styles.input} ${styles.mono} ${errors.cardNumber ? styles.error : ''}`}
-          type="text" inputMode="numeric" placeholder="•••• •••• •••• ••••"
-          value={values.cardNumber}
-          onChange={e => set('cardNumber', formatCardNumber(e.target.value))} />
-        {errors.cardNumber && <span className={styles.errorMsg}>{errors.cardNumber}</span>}
-      </div>
+      <FormField label="Card Number" required error={e.cardNumber}>
+        <Input placeholder="•••• •••• •••• ••••" inputMode="numeric" mono error={!!e.cardNumber}
+          value={v.cardNumber}
+          onChange={ev => set('cardNumber', formatCardNumber(ev.target.value))} />
+      </FormField>
 
-      <div className={styles.row}>
-        <div className={styles.field}>
-          <label className={styles.label}>Expiry (MM/YY)</label>
-          <input className={`${styles.input} ${styles.mono} ${errors.expiry ? styles.error : ''}`}
-            type="text" inputMode="numeric" placeholder="MM/YY" maxLength={5}
-            value={values.expiry}
-            onChange={e => set('expiry', formatExpiry(e.target.value))} />
-          {errors.expiry && <span className={styles.errorMsg}>{errors.expiry}</span>}
-        </div>
 
-        <div className={styles.field}>
-          <label className={styles.label}>CVV</label>
-          <input className={`${styles.input} ${styles.mono} ${errors.cvv ? styles.error : ''}`}
-            type="password" inputMode="numeric" placeholder="•••" maxLength={4}
-            value={values.cvv}
-            onChange={e => set('cvv', e.target.value.replace(/\D/g, '').slice(0, 4))} />
-          {errors.cvv && <span className={styles.errorMsg}>{errors.cvv}</span>}
-        </div>
-      </div>
+      <FormField label="Expiry (MM/YY)" required error={e.expiry}>
+        <Input placeholder="MM/YY" inputMode="numeric" maxLength={5} mono error={!!e.expiry}
+          value={v.expiry} onChange={ev => set('expiry', formatExpiry(ev.target.value))} />
+      </FormField>
+      <FormField label="CVV" required error={e.cvv}>
+        <Input type="password" inputMode="numeric" placeholder="•••" maxLength={4} mono error={!!e.cvv}
+          value={v.cvv} onChange={ev => set('cvv', ev.target.value.replace(/\D/g, '').slice(0, 4))} />
+      </FormField>
 
-      <button type="submit" disabled={disabled} className={styles.submitBtn}>
-        Pay Now
-      </button>
+      <Button type="submit" full disabled={disabled}>Pay Now</Button>
     </form>
   );
 }

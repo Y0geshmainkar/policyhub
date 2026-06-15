@@ -1,34 +1,94 @@
 @use '../../styles/tokens' as *;
+@use 'sass:color';
 
 $breakpoint: 640px;
 
 .panel {
   flex: 1;
-  padding: $space-xl;
   overflow-y: auto;
+  background: $off-white;
+  padding: $space-xl;
 
-  @media (max-width: $breakpoint) {
-    padding: $space-md;
-  }
+  @media (max-width: $breakpoint) { padding: $space-md; }
 }
 
-.heading {
-  font-family: $font-serif;
-  font-size: 24px;
-  color: $navy;
+// Plain page header — no dark bg
+.pageHeader {
   margin-bottom: $space-lg;
+}
+
+.pageTitle {
+  font-family: $font-sans;
+  font-size: 22px;
+  font-weight: 700;
+  color: $dark;
+  margin-bottom: 4px;
+}
+
+.pageSubtitle {
+  font-size: 13px;
+  color: $slate-mid;
+}
+
+// Stat cards row (TallyPrime style)
+.statsRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $space-md;
+  margin-bottom: $space-xl;
+
+  @media (max-width: $breakpoint) { gap: $space-sm; }
+}
+
+.statCard {
+  flex: 1 1 160px;
+  background: $white;
+  border: 1px solid $border-color;
+  border-radius: $radius-md;
+  padding: $space-md;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $space-md;
+}
+
+.statInfo { display: flex; flex-direction: column; gap: 4px; }
+.statLabel { font-size: 12px; color: $slate-mid; }
+.statValue { font-size: 20px; font-weight: 700; color: $dark; }
+.statSub   { font-size: 11px; color: $forest; font-weight: 600; }
+
+.statIcon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  &.orange  { background: rgba($orange, 0.1); }
+  &.green   { background: rgba($forest, 0.1); }
+  &.red     { background: rgba($rust,   0.1); }
+  &.blue    { background: rgba(#3B82F6,  0.1); }
+}
+
+// Division section heading
+.sectionHeading {
+  font-size: 16px;
+  font-weight: 700;
+  color: $dark;
+  margin-bottom: $space-md;
+  display: flex;
+  align-items: center;
+  gap: $space-sm;
 
   span {
-    font-family: $font-mono;
-    font-size: 16px;
-    color: $slate;
-    margin-left: $space-sm;
-    font-weight: 400;
-  }
-
-  @media (max-width: $breakpoint) {
-    font-size: 20px;
-    margin-bottom: $space-md;
+    font-size: 12px;
+    font-weight: 600;
+    color: $white;
+    background: $orange;
+    padding: 2px 8px;
+    border-radius: $radius-pill;
   }
 }
 
@@ -49,6 +109,6 @@ $breakpoint: 640px;
 }
 
 .empty {
-  color: $slate;
+  color: $slate-mid;
   font-style: italic;
 }
