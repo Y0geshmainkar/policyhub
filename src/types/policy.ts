@@ -2,6 +2,13 @@ export type Division = 'GL' | 'AI' | 'UA' | 'GN' | 'NI' | 'FH' | 'LN';
 export type PolicyStatus = 'active' | 'due' | 'lapsed';
 export type SourceSystem = 'CFO' | 'OIPA' | 'OPA-LNL' | 'LNL';
 
+export interface PaymentRecord {
+  date: string;
+  amount: number;
+  method: string;
+  status: 'paid' | 'pending' | 'failed';
+}
+
 export interface Policy {
   id: string;
   division: Division;
@@ -13,6 +20,7 @@ export interface Policy {
   autoPay: boolean;
   sourceSystem: SourceSystem;
   insuredName: string;
+  paymentHistory: PaymentRecord[];
 }
 
 export const DIVISION_NAMES: Record<Division, string> = {

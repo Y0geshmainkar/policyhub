@@ -1,5 +1,4 @@
-import { Policy } from '../types/policy';
-import { ApiPolicyRaw, normalizeApiPolicy } from './normalizers';
+import { normalizeApiPolicy, ApiPolicyRaw } from './normalizers';
 
 const apiRecords: ApiPolicyRaw[] = [
   // UA — Medicare Supplement
@@ -58,4 +57,29 @@ const apiRecords: ApiPolicyRaw[] = [
   { policyNo: '571703482', registeredCompanyCode: 'UA', companyCode: 'UA', planName: 'Whole Life + ADB', policyStatusDescription: 'Inactive-Payment Due', totalMonthlyPremium: 14.0, totalAnnualPremium: 163.0, paidToDate: '2026-01-08T00:00:00', autoPay: false, systemCode: 'CFU', insuredName: 'ANDRAE, DIANA' },
 ];
 
-export const mockPolicies: Policy[] = apiRecords.map(normalizeApiPolicy);
+const PAYMENT_HISTORY: Record<string, import('../types/policy').PaymentRecord[]> = {
+  '00A327584': [
+    { date: '2026-06-16', amount: 24.00, method: 'Bank Draft', status: 'paid' },
+    { date: '2026-05-16', amount: 24.00, method: 'Bank Draft', status: 'paid' },
+    { date: '2026-04-16', amount: 24.00, method: 'Bank Draft', status: 'paid' },
+  ],
+  '4098658': [
+    { date: '2026-06-22', amount: 9.37,  method: 'Direct Bill', status: 'paid' },
+    { date: '2026-05-22', amount: 9.37,  method: 'Direct Bill', status: 'paid' },
+    { date: '2026-04-22', amount: 9.37,  method: 'Direct Bill', status: 'failed' },
+  ],
+  '371716986': [
+    { date: '2026-04-23', amount: 19.88, method: 'Direct Bill', status: 'pending' },
+    { date: '2026-01-23', amount: 19.88, method: 'Direct Bill', status: 'paid' },
+    { date: '2025-10-23', amount: 19.88, method: 'Direct Bill', status: 'paid' },
+  ],
+  'A000709057': [
+    { date: '2026-05-01', amount: 12.00, method: 'Premium Notice', status: 'paid' },
+    { date: '2026-04-01', amount: 12.00, method: 'Premium Notice', status: 'paid' },
+  ],
+};
+
+export const mockPolicies = apiRecords.map(normalizeApiPolicy).map(p => ({
+  ...p,
+  paymentHistory: PAYMENT_HISTORY[p.id] ?? [],
+}));

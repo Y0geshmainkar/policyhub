@@ -73,6 +73,7 @@ export const normalizeCfo = (raw: CfoRaw): Policy => ({
   autoPay: raw.autoPayEnabled,
   sourceSystem: 'CFO',
   insuredName: raw.insuredFullName ?? '',
+  paymentHistory: [],
 });
 
 export const normalizeOipa = (raw: OipaRaw): Policy => ({
@@ -86,6 +87,7 @@ export const normalizeOipa = (raw: OipaRaw): Policy => ({
   autoPay: raw.autopayFlg === 'Y',
   sourceSystem: 'OIPA',
   insuredName: raw.insuredName ?? '',
+  paymentHistory: [],
 });
 
 export const normalizeOpaLnl = (raw: OpaLnlRaw): Policy => ({
@@ -99,6 +101,7 @@ export const normalizeOpaLnl = (raw: OpaLnlRaw): Policy => ({
   autoPay: raw.auto_pay,
   sourceSystem: 'OPA-LNL',
   insuredName: raw.insured_name ?? '',
+  paymentHistory: [],
 });
 
 export const normalizeLnl = (raw: LnlRaw): Policy => ({
@@ -112,6 +115,7 @@ export const normalizeLnl = (raw: LnlRaw): Policy => ({
   autoPay: raw.ap === 1,
   sourceSystem: 'LNL',
   insuredName: raw.insuredName ?? '',
+  paymentHistory: [],
 });
 
 // ── Generic dispatcher ──
@@ -175,5 +179,6 @@ export const normalizeApiPolicy = (raw: ApiPolicyRaw): Policy => {
     autoPay: raw.autoPay,
     sourceSystem: apiSourceSystem(raw.systemCode),
     insuredName: raw.insuredName ?? '',
+    paymentHistory: [],
   };
 };
