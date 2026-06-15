@@ -1,0 +1,10 @@
+{
+  "success": true,
+  "statusCode": 1,
+  "message": "Payment processed successfully.",
+  "data": {
+    "paymentConfirmationNo": "CONF-CC-20260615",
+    "paymentStatus": "Approved",
+    "last4": "4242"
+  }
+}

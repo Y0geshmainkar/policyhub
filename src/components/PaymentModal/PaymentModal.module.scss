@@ -1,0 +1,144 @@
+@use '../../styles/tokens' as *;
+@use 'sass:color';
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba($navy, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 500;
+  padding: $space-md;
+}
+
+.modal {
+  background: $paper;
+  border-radius: 10px;
+  width: 100%;
+  max-width: 480px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: $space-lg;
+  border-bottom: 1px solid rgba($slate, 0.15);
+}
+
+.title {
+  font-family: $font-serif;
+  font-size: 18px;
+  color: $navy;
+}
+
+.close {
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: $slate;
+  cursor: pointer;
+  padding: $space-xs;
+  line-height: 1;
+
+  &:hover { color: $navy; }
+}
+
+.tabs {
+  display: flex;
+  border-bottom: 2px solid rgba($slate, 0.15);
+}
+
+.tab {
+  flex: 1;
+  padding: $space-md;
+  background: none;
+  border: none;
+  font-size: 14px;
+  font-weight: 500;
+  color: $slate;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  transition: color 0.15s, border-color 0.15s;
+
+  &.active {
+    color: $navy;
+    border-bottom-color: $gold;
+    font-weight: 600;
+  }
+}
+
+.body {
+  padding: $space-lg;
+}
+
+// Success state
+.success {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $space-md;
+  padding: $space-xl;
+  text-align: center;
+}
+
+.successIcon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: color.adjust($forest, $lightness: 50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+}
+
+.successTitle {
+  font-family: $font-serif;
+  font-size: 20px;
+  color: $forest;
+}
+
+.confirmNo {
+  font-family: $font-mono;
+  font-size: 13px;
+  color: $slate;
+  background: rgba($slate, 0.08);
+  padding: $space-xs $space-md;
+  border-radius: 4px;
+}
+
+.tokenDisplay {
+  font-size: 12px;
+  color: $slate;
+}
+
+.errorBanner {
+  background: color.adjust($rust, $lightness: 38%);
+  color: $rust;
+  border-radius: 6px;
+  padding: $space-sm $space-md;
+  font-size: 13px;
+  margin-bottom: $space-sm;
+}
+
+.doneBtn {
+  background: $navy;
+  color: $parchment;
+  border: none;
+  border-radius: 6px;
+  padding: 12px 32px;
+  font-family: $font-sans;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: $space-sm;
+
+  &:hover { opacity: 0.88; }
+  &:focus-visible { outline: 3px solid $gold; outline-offset: 2px; }
+}

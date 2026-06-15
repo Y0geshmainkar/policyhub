@@ -175,3 +175,23 @@
   color: $slate;
   font-style: italic;
 }
+
+.makePaymentBtn {
+  margin-top: $space-lg;
+  height: 48px;
+  background: $gold;
+  color: $paper;
+  border: none;
+  border-radius: 6px;
+  font-family: $font-sans;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+  max-width: 260px;
+  transition: opacity 0.15s;
+
+  &:hover { opacity: 0.88; }
+  &:disabled { opacity: 0.5; cursor: not-allowed; }
+  &:focus-visible { outline: 3px solid $navy; outline-offset: 2px; }
+}

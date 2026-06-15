@@ -1,9 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit';
 import policiesReducer from './policiesSlice';
+import uiReducer from './uiSlice';
+import paymentReducer from './paymentSlice';
 
 export const store = configureStore({
   reducer: {
     policies: policiesReducer,
+    ui: uiReducer,
+    payment: paymentReducer,
   },
 });
 

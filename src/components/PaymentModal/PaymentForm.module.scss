@@ -1,0 +1,93 @@
+@use '../../styles/tokens' as *;
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: $space-md;
+}
+
+.row {
+  display: flex;
+  gap: $space-md;
+
+  > * { flex: 1; }
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: $space-xs;
+}
+
+.label {
+  font-size: 12px;
+  font-weight: 600;
+  color: $slate;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.input {
+  height: 44px;
+  padding: 0 $space-md;
+  border: 1.5px solid rgba($slate, 0.3);
+  border-radius: 6px;
+  font-family: $font-sans;
+  font-size: 14px;
+  color: $navy;
+  background: $paper;
+  outline: none;
+  transition: border-color 0.15s;
+  width: 100%;
+
+  &:focus {
+    border-color: $gold;
+  }
+
+  &.error {
+    border-color: $rust;
+  }
+
+  &:disabled {
+    background: rgba($slate, 0.08);
+    color: $slate;
+  }
+}
+
+.mono {
+  font-family: $font-mono;
+  letter-spacing: 0.1em;
+}
+
+.errorMsg {
+  font-size: 12px;
+  color: $rust;
+}
+
+.select {
+  @extend .input;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235C6B7A' fill='none' stroke-width='1.5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 32px;
+}
+
+.submitBtn {
+  height: 48px;
+  background: $gold;
+  color: $paper;
+  border: none;
+  border-radius: 6px;
+  font-family: $font-sans;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.15s;
+  width: 100%;
+
+  &:hover:not(:disabled) { opacity: 0.88; }
+  &:disabled { opacity: 0.5; cursor: not-allowed; }
+  &:focus-visible { outline: 3px solid $navy; outline-offset: 2px; }
+}
