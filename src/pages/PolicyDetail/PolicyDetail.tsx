@@ -2,6 +2,7 @@ import { Link, useParams } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '../../store/hooks';
 import { StatusBadge } from '../../components/StatusBadge/StatusBadge';
 import { AutoPayToggle } from '../../components/AutoPayToggle/AutoPayToggle';
+import { Button } from '../../components/UI';
 import { openModal } from '../../store/paymentSlice';
 import styles from './PolicyDetail.module.scss';
 
@@ -58,14 +59,13 @@ export function PolicyDetail() {
           </div>
         </div>
 
-        <button
-          className={styles.makePaymentBtn}
+        <Button
           onClick={() => dispatch(openModal(policy.id))}
-          disabled={policy.status === 'active' && !policy.paymentHistory.length}
           aria-label={`Make a payment for policy ${policy.id}`}
+          style={{ marginTop: 24, maxWidth: 260 }}
         >
           Make a Payment
-        </button>
+        </Button>
 
         {/* Payment History */}
         <section className={styles.section} aria-label="Payment history">

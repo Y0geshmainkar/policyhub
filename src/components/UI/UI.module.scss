@@ -1,0 +1,129 @@
+@use '../../styles/tokens' as *;
+@use 'sass:color';
+
+// ── Base input ────────────────────────────────────────────────────────────
+.input {
+  height: 48px;
+  width: 100%;
+  padding: 0 $space-md;
+  font-family: $font-sans;
+  font-size: 14px;
+  color: $dark;
+  background: $white;
+  border: $border-width solid $border-color;
+  border-radius: $radius-sm;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+
+  &::placeholder { color: $slate-mid; }
+
+  &:hover  { border-color: $border-color-hover; }
+  &:focus  { border-color: $border-color-focus; box-shadow: 0 0 0 3px rgba($orange, 0.12); }
+
+  &.error  { border-color: $rust; }
+  &.mono   { font-family: $font-mono; letter-spacing: 0.08em; }
+  &:disabled { background: $off-white; color: $slate-mid; cursor: not-allowed; }
+}
+
+// ── Label ─────────────────────────────────────────────────────────────────
+.label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: $slate-mid;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: $space-xs;
+}
+
+.required {
+  color: $rust;
+  margin-left: 2px;
+}
+
+// ── Error message ─────────────────────────────────────────────────────────
+.errorMsg {
+  font-size: 12px;
+  color: $rust;
+  margin-top: $space-xs;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+// ── Field wrapper ─────────────────────────────────────────────────────────
+.field {
+  display: flex;
+  flex-direction: column;
+}
+
+// ── Select ────────────────────────────────────────────────────────────────
+.select {
+  @extend .input;
+  appearance: none;
+  cursor: pointer;
+  padding-right: 36px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238391A1' fill='none' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+}
+
+// ── Button variants ───────────────────────────────────────────────────────
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: $space-sm;
+  height: 48px;
+  padding: 0 $space-xl;
+  font-family: $font-sans;
+  font-size: 15px;
+  font-weight: 600;
+  border: none;
+  border-radius: $radius-sm;
+  cursor: pointer;
+  transition: opacity 0.15s, transform 0.1s, box-shadow 0.15s;
+  white-space: nowrap;
+
+  &:focus-visible { outline: $focus-outline; outline-offset: $focus-outline-offset; }
+  &:disabled      { opacity: 0.5; cursor: not-allowed; transform: none !important; }
+  &:active:not(:disabled) { transform: translateY(1px); }
+}
+
+.btnPrimary {
+  @extend .btn;
+  background: $orange;
+  color: $white;
+  box-shadow: 0 2px 8px rgba($orange, 0.3);
+
+  &:hover:not(:disabled) {
+    opacity: 0.92;
+    box-shadow: 0 4px 12px rgba($orange, 0.4);
+  }
+}
+
+.btnSecondary {
+  @extend .btn;
+  background: $white;
+  color: $dark;
+  border: $border-width solid $border-color;
+
+  &:hover:not(:disabled) { border-color: $orange; color: $orange; }
+}
+
+.btnGhost {
+  @extend .btn;
+  background: transparent;
+  color: $orange;
+
+  &:hover:not(:disabled) { background: rgba($orange, 0.06); }
+}
+
+.btnFull { width: 100%; }
+
+.btnSm {
+  height: 36px;
+  padding: 0 $space-md;
+  font-size: 13px;
+  border-radius: $radius-sm;
+}
