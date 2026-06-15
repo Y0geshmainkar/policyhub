@@ -5,6 +5,8 @@
   flex: 1;
   padding: $space-xl;
   overflow-y: auto;
+
+  @media (max-width: 640px) { padding: $space-md; }
 }
 
 .back {
@@ -15,7 +17,6 @@
   font-size: 13px;
   text-decoration: none;
   margin-bottom: $space-lg;
-
   &:hover { color: $navy; }
 }
 
@@ -23,39 +24,77 @@
   background: $paper;
   border-radius: 8px;
   padding: $space-xl;
-  max-width: 600px;
+  max-width: 640px;
   box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+
+  @media (max-width: 640px) { padding: $space-md; }
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: $space-md;
+  margin-bottom: $space-sm;
+  flex-wrap: wrap;
 }
 
 .id {
   font-family: $font-mono;
-  font-size: 13px;
+  font-size: 12px;
   color: $slate;
-  margin-bottom: $space-sm;
+}
+
+.sourceBadge {
+  font-family: $font-mono;
+  font-size: 11px;
+  background: color.adjust($navy, $lightness: 62%);
+  color: $navy;
+  padding: 3px 8px;
+  border-radius: 4px;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
 }
 
 .title {
   font-family: $font-serif;
-  font-size: 26px;
+  font-size: 22px;
   color: $navy;
+  margin-bottom: $space-xs;
+}
+
+.insured {
+  font-size: 14px;
+  color: $slate;
   margin-bottom: $space-md;
 }
 
 .rows {
-  display: grid;
-  grid-template-columns: 140px 1fr;
-  gap: $space-sm $space-md;
-  margin-top: $space-md;
+  display: flex;
+  flex-direction: column;
+  gap: $space-sm;
+  margin: $space-md 0;
+  border-top: 1px solid rgba($slate, 0.15);
+  padding-top: $space-md;
 }
 
-.label {
+.row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: $space-md;
+}
+
+.rowLabel {
   color: $slate;
   font-size: 13px;
+  flex-shrink: 0;
 }
 
-.value {
+.rowValue {
   font-size: 14px;
   font-weight: 500;
+  text-align: right;
 
   &.mono {
     font-family: $font-mono;
@@ -64,16 +103,72 @@
   }
 }
 
-.sourceBadge {
-  display: inline-block;
-  margin-top: $space-lg;
-  font-family: $font-mono;
-  font-size: 11px;
-  background: color.adjust($navy, $lightness: 60%);
+// Payment history
+.section {
+  margin-top: $space-xl;
+  border-top: 1px solid rgba($slate, 0.15);
+  padding-top: $space-lg;
+}
+
+.sectionTitle {
+  font-family: $font-serif;
+  font-size: 16px;
   color: $navy;
-  padding: 3px 8px;
-  border-radius: 4px;
-  letter-spacing: 0.05em;
+  margin-bottom: $space-md;
+}
+
+.historyList {
+  display: flex;
+  flex-direction: column;
+  gap: $space-sm;
+}
+
+.historyRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  padding: $space-xs 0;
+  border-bottom: 1px solid rgba($slate, 0.08);
+  gap: $space-sm;
+}
+
+.historyDate {
+  color: $slate;
+  font-family: $font-mono;
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+.historyMethod {
+  color: $slate;
+  flex: 1;
+}
+
+.historyAmount {
+  font-family: $font-mono;
+  font-weight: 500;
+  color: $navy;
+  flex-shrink: 0;
+}
+
+.historyStatus {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  padding: 2px 6px;
+  border-radius: 10px;
+  flex-shrink: 0;
+
+  &.paid    { background: color.adjust($forest, $lightness: 50%); color: $forest; }
+  &.pending { background: color.adjust($gold, $lightness: 38%);   color: color.adjust($gold, $lightness: -10%); }
+  &.failed  { background: color.adjust($rust, $lightness: 38%);   color: $rust; }
+}
+
+.noHistory {
+  color: $slate;
+  font-style: italic;
+  font-size: 13px;
 }
 
 .notFound {
