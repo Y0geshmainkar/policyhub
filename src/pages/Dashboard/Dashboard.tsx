@@ -1,9 +1,26 @@
 import { useAppSelector } from '../../store/hooks';
 import { DIVISION_NAMES } from '../../types/policy';
 import { PolicyCard } from '../../components/PolicyCard/PolicyCard';
-import { ShieldIcon, ChartIcon, MedicalIcon } from '../../components/icons/Icons';
 import { usePolicies } from '../../hooks/usePayment';
 import styles from './Dashboard.module.scss';
+
+const TrendIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+    <path d="M3 14l4-4 3 3 6-7" stroke="#F58220" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
+const ShieldStatIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+    <path d="M10 2L3 5v5c0 4 3 7 7 8 4-1 7-4 7-8V5L10 2z" stroke="#22A86E" strokeWidth="1.5" fill="none"/>
+    <path d="M7 10l2 2 4-4" stroke="#22A86E" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
+const AlertStatIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+    <path d="M10 3L2 17h16L10 3z" stroke="#EF4444" strokeWidth="1.5" fill="none" strokeLinejoin="round"/>
+    <path d="M10 9v3M10 14v1" stroke="#EF4444" strokeWidth="1.5" strokeLinecap="round"/>
+  </svg>
+);
 
 export function Dashboard() {
   const activeDivision = useAppSelector(s => s.policies.activeDivision);
@@ -32,12 +49,12 @@ export function Dashboard() {
         <div className={styles.statsRow}>
           <div className={styles.statCard}>
             <div className={styles.statInfo}>
-              <span className={styles.statLabel}>Active Policies</span>
-              <span className={styles.statValue}>{activeCount}</span>
-              <span className={styles.statSub}>of {filtered.length} total</span>
+              <span className={styles.statLabel}>Monthly Premium</span>
+              <span className={styles.statValue}>${totalPremium.toFixed(0)}</span>
+              <span className={styles.statSub}>combined/mo</span>
             </div>
-            <div className={`${styles.statIcon} ${styles.green}`}>
-              <ShieldIcon color="#22A86E" />
+            <div className={`${styles.statIcon} ${styles.orange}`}>
+              <TrendIcon />
             </div>
           </div>
           <div className={styles.statCard}>
@@ -47,7 +64,17 @@ export function Dashboard() {
               <span className={styles.statSub}>combined/mo</span>
             </div>
             <div className={`${styles.statIcon} ${styles.orange}`}>
-              <ChartIcon color="#F58220" />
+              <TrendIcon />
+            </div>
+          </div>
+          <div className={styles.statCard}>
+            <div className={styles.statInfo}>
+              <span className={styles.statLabel}>Active Policies</span>
+              <span className={styles.statValue}>{activeCount}</span>
+              <span className={styles.statSub}>of {filtered.length} total</span>
+            </div>
+            <div className={`${styles.statIcon} ${styles.green}`}>
+              <ShieldStatIcon />
             </div>
           </div>
           {dueCount > 0 && (
@@ -58,7 +85,7 @@ export function Dashboard() {
                 <span className={styles.statSub}>action required</span>
               </div>
               <div className={`${styles.statIcon} ${styles.red}`}>
-                <MedicalIcon color="#EF4444" />
+                <AlertStatIcon />
               </div>
             </div>
           )}
