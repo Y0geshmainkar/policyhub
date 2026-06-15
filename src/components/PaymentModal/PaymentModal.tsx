@@ -4,13 +4,12 @@ import {
   closeModal, setPaymentType, setProcessing, setSuccess, setError,
 } from '../../store/paymentSlice';
 import { updatePolicyStatus } from '../../store/policiesSlice';
-import { schedulePaymentCC, schedulePaymentBank } from '../../api/apiClient';
+import { usePaymentCC, usePaymentBank } from '../../hooks/usePayment';
 import { CreditCardForm, type CCFormValues } from './CreditCardForm';
 import { BankDraftForm, type BankFormValues } from './BankDraftForm';
 import styles from './PaymentModal.module.scss';
 
-/** Mock tokenizer — mirrors Cybersource: only last4 extracted, full number discarded */
-const mockTokenize = (cardNumber: string): { token: string; last4: string } => ({
+const mockTokenize = (cardNumber: string) => ({
   token: `tok_${Math.random().toString(36).slice(2, 12)}`,
   last4: cardNumber.replace(/\s/g, '').slice(-4),
 });
@@ -20,51 +19,49 @@ export function PaymentModal() {
   const { modalOpen, policyId, paymentType, status, last4, confirmationNo, errorMessage } = useAppSelector(s => s.payment);
   const closeRef = useRef<HTMLButtonElement>(null);
 
-  // Trap focus back to close button when modal opens
+  const ccMutation = usePaymentCC();
+  const bankMutation = usePaymentBank();
+
   useEffect(() => {
     if (modalOpen) closeRef.current?.focus();
   }, [modalOpen]);
 
   if (!modalOpen) return null;
 
-  const policy = policyId;
-
   const handleCC = async (values: CCFormValues) => {
     dispatch(setProcessing());
     const { token, last4 } = mockTokenize(values.cardNumber);
-    try {
-      const res: any = await schedulePaymentCC({ token, last4, policyId: policy });
-      const data = res.data?.data;
-      if (data) {
-        dispatch(setSuccess({ token, last4, confirmationNo: data.paymentConfirmationNo }));
-        if (policy) dispatch(updatePolicyStatus({ id: policy, status: 'active' }));
-        sessionStorage.setItem('paymentToken', token);
-      } else {
-        dispatch(setError('Payment failed. Please try again.'));
+    ccMutation.mutate(
+      { policyId: policyId!, token, last4 },
+      {
+        onSuccess: (data) => {
+          dispatch(setSuccess({ token, last4, confirmationNo: data?.paymentConfirmationNo ?? 'CONF-OK' }));
+          if (policyId) dispatch(updatePolicyStatus({ id: policyId, status: 'active' }));
+          sessionStorage.setItem('paymentToken', token);
+        },
+        onError: () => dispatch(setError('Payment failed. Please try again.')),
       }
-    } catch {
-      dispatch(setError('Network error. Please try again.'));
-    }
+    );
   };
 
   const handleBank = async (values: BankFormValues) => {
     dispatch(setProcessing());
     const last4 = values.accountNumber.slice(-4);
     const token = `tok_bank_${Math.random().toString(36).slice(2, 10)}`;
-    try {
-      const res: any = await schedulePaymentBank({ ...values, policyId: policy });
-      const data = res.data?.data;
-      if (data) {
-        dispatch(setSuccess({ token, last4, confirmationNo: data.paymentConfirmationNo }));
-        if (policy) dispatch(updatePolicyStatus({ id: policy, status: 'active' }));
-        sessionStorage.setItem('paymentToken', token);
-      } else {
-        dispatch(setError('Payment failed. Please try again.'));
+    bankMutation.mutate(
+      { policyId: policyId!, token, last4, ...values },
+      {
+        onSuccess: (data) => {
+          dispatch(setSuccess({ token, last4, confirmationNo: data?.paymentConfirmationNo ?? 'CONF-OK' }));
+          if (policyId) dispatch(updatePolicyStatus({ id: policyId, status: 'active' }));
+          sessionStorage.setItem('paymentToken', token);
+        },
+        onError: () => dispatch(setError('Payment failed. Please try again.')),
       }
-    } catch {
-      dispatch(setError('Network error. Please try again.'));
-    }
+    );
   };
+
+  const isProcessing = ccMutation.isPending || bankMutation.isPending;
 
   return (
     <div className={styles.backdrop} role="dialog" aria-modal="true" aria-labelledby="modal-title"
@@ -99,8 +96,8 @@ export function PaymentModal() {
             <div className={styles.body} role="tabpanel">
               {errorMessage && <div className={styles.errorBanner}>{errorMessage}</div>}
               {paymentType === 'CC'
-                ? <CreditCardForm onSubmit={handleCC} disabled={status === 'processing'} />
-                : <BankDraftForm onSubmit={handleBank} disabled={status === 'processing'} />
+                ? <CreditCardForm onSubmit={handleCC} disabled={isProcessing} />
+                : <BankDraftForm onSubmit={handleBank} disabled={isProcessing} />
               }
             </div>
           </>
