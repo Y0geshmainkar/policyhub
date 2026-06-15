@@ -1,331 +1,210 @@
-# React Interview Prep — Living Reference
+# React Interview Prep — Q&A with Examples
 
-> Add to this file every time we cover a new topic.
-> Each section: concept → how we use it in PolicyHub → likely interview questions.
-
----
-
-## 1. Redux & Redux Toolkit
-
-### What it is
-Single global store outside React components. One-way data flow: Action → Reducer → New State → Re-render.
-
-### Three pieces
-| Piece | What it is | Our example |
-|-------|-----------|-------------|
-| Action | Plain object describing what happened | `{ type: 'ui/setLoading', payload: true }` |
-| Reducer | Function: (state, action) → new state | `setLoading` in `uiSlice.ts` |
-| Store | Holds state, runs reducers | `src/store/index.ts` |
-
-### createSlice — collapses all three into one file
-```ts
-const uiSlice = createSlice({
-  name: 'ui',
-  initialState: { isLoading: false },
-  reducers: {
-    setLoading: (state, action) => { state.isLoading = action.payload }
-  }
-});
-export const { setLoading } = uiSlice.actions;  // action creator
-export default uiSlice.reducer;                  // reducer
-```
-
-### Our 3 slices
-| Slice | Owns |
-|-------|------|
-| `policiesSlice` | All 40 policies, activeDivision, selectedPolicyId |
-| `uiSlice` | isLoading, loadingMessage |
-| `paymentSlice` | modalOpen, paymentType, status, token, last4, confirmationNo |
-
-### Golden rule
-- Multiple components need same data → **Redux**
-- Only one component needs it → **useState**
-
-### Interview questions
-- What is Redux and why use it?
-- What problem does Redux solve? (prop drilling)
-- What is a reducer? Must it be pure?
-- What is an action? What is an action creator?
-- What is Redux Toolkit and how does it differ from plain Redux?
-- What is `createSlice`?
-- Can one component dispatch to multiple slices? (Yes — PaymentModal does this)
-- Where do you put data in Redux vs local state?
+> Format: Question → 1-2 line answer → PolicyHub example
 
 ---
 
-## 2. React-Redux Hooks
+## Redux & Redux Toolkit
 
-### useAppSelector — reads from store
-```ts
-const { isLoading } = useAppSelector(s => s.ui);
-```
-- `s` = entire RootState
-- Selector picks what you need
-- Component re-renders ONLY when selected value changes (strict equality `===`)
-- Uses `TypedUseSelectorHook<RootState>` for TypeScript safety
+**Q: What is Redux and why use it?**
+A: A single global state container outside React. Use it when multiple unrelated components need the same data.
+> In PolicyHub: `LoadingOverlay` and `apiClient` both need `isLoading` — neither is parent/child of the other.
 
-### useAppDispatch — writes to store
-```ts
-const dispatch = useAppDispatch();
-dispatch(setLoading(true));
-```
-- Returns the store's dispatch function
-- Uses `useDispatch<AppDispatch>()` for TypeScript safety
+**Q: What problem does Redux solve?**
+A: Prop drilling — passing data through many component levels just to reach a deeply nested child.
+> Without Redux: `App → Dashboard → PolicyCard → PaymentButton` all need payment state. With Redux: `PaymentModal` just reads `s.payment` directly.
 
-### Why typed wrappers?
-Raw `useSelector` gives `state: unknown`. Typed version gives full autocomplete + compile-time error on wrong payloads.
+**Q: What is a reducer? Must it be pure?**
+A: A function `(currentState, action) => newState`. Yes, must be pure — same inputs always return same output, no API calls or side effects inside.
+> `setActiveDivision(state, action) => { state.activeDivision = action.payload }` — just sets a value, nothing else.
 
-### store.dispatch vs useAppDispatch
-| | `useAppDispatch` | `store.dispatch` |
-|--|--|--|
-| Where | Inside React components | Outside React (apiClient.ts) |
-| Why | Hooks only work in components | Plain TS modules can't use hooks |
+**Q: What is an action? What is an action creator?**
+A: Action = plain object `{ type: 'ui/setLoading', payload: true }`. Action creator = function that creates that object.
+> `setLoading(true)` is the action creator. Calling it returns the action object. `dispatch(setLoading(true))` sends it.
 
-### Interview questions
-- What is `useSelector`? How does it decide when to re-render?
-- What is `useDispatch`?
-- Why create typed wrappers (`useAppSelector`, `useAppDispatch`)?
-- What is `RootState`? How do you derive it?
-- How do you use Redux outside a React component?
+**Q: What is Redux Toolkit vs plain Redux?**
+A: Redux Toolkit removes boilerplate — `createSlice` replaces separate action types, action creators, and reducers. Also enables "mutating" syntax via Immer under the hood.
+> Old Redux needed ~50 lines for what our `uiSlice.ts` does in 15 lines.
+
+**Q: Can one component dispatch to multiple slices?**
+A: Yes. Dispatch is just a function — you can call it as many times as you want.
+> `PaymentModal` dispatches `setSuccess` (paymentSlice) AND `updatePolicyStatus` (policiesSlice) after a successful payment.
 
 ---
 
-## 3. React Hooks — Core
+## React-Redux Hooks
 
-### useState
-```ts
-const [value, setValue] = useState('');
-```
-- Local state — only this component cares
-- We use in: `CreditCardForm`, `BankDraftForm` for form inputs + errors
-- Re-renders only this component when called
+**Q: What is `useSelector`? When does it re-render?**
+A: Reads from Redux store. Re-renders only when the selected value changes (strict `===` comparison).
+> `LoadingOverlay` uses `s => s.ui.isLoading`. Clicking a sidebar tab does NOT re-render it because `isLoading` didn't change.
 
-### useEffect
+**Q: What is `useDispatch`?**
+A: Returns the store's dispatch function so you can send actions from a component.
+> `const dispatch = useAppDispatch()` then `dispatch(openModal(policy.id))` in `PolicyDetail`.
+
+**Q: Why create typed wrappers `useAppSelector` / `useAppDispatch`?**
+A: Raw hooks give `state: unknown`. Typed wrappers bake in your store's types so TypeScript catches wrong payloads at compile time.
+> `dispatch(setLoading("yes"))` → TS error. `dispatch(setLoading(true))` → ✅.
+
+**Q: How do you use Redux outside a React component?**
+A: Import `store` directly and call `store.dispatch()`. Hooks only work inside components.
+> `apiClient.ts` does `store.dispatch(setLoading(true))` in the axios interceptor — no hooks needed.
+
+---
+
+## useState
+
+**Q: Difference between `useState` and a regular variable?**
+A: Regular variable resets on every render. `useState` persists between renders and triggers a re-render when updated.
+> In `CreditCardForm`, `const [cardNumber, setCardNumber] = useState('')` — typed value survives re-renders, regular `let cardNumber = ''` would reset.
+
+**Q: Does `setState` update immediately?**
+A: No — it's asynchronous and batched. The new value is available on the next render.
+> `setCardNumber('1234')` then `console.log(cardNumber)` still logs the old value.
+
+**Q: When should you NOT use useState?**
+A: When multiple unrelated components need the same state — use Redux instead.
+> `isLoading` is in Redux not `useState` because both `LoadingOverlay` and `apiClient` need it.
+
+---
+
+## useEffect
+
+**Q: What is a side effect in React?**
+A: Anything that interacts outside the component — API calls, DOM manipulation, timers, subscriptions.
+> Focusing the close button when PaymentModal opens is a side effect — it touches the DOM.
+
+**Q: What does the dependency array do?**
+A: Controls when the effect runs. `[]` = once on mount. `[x]` = when x changes. No array = every render.
+> `useEffect(() => { closeRef.current?.focus() }, [modalOpen])` — only runs when `modalOpen` changes.
+
+**Q: What is the cleanup function?**
+A: A function returned from `useEffect` that runs before the next effect or on unmount. Used to cancel timers, subscriptions, etc.
 ```ts
 useEffect(() => {
-  // runs after render
-  closeRef.current?.focus();
-}, [modalOpen]);  // only when modalOpen changes
+  const timer = setTimeout(fn, 1000);
+  return () => clearTimeout(timer); // cleanup
+}, []);
 ```
-- Run code after render (side effects)
-- Dependency array controls when it runs
-- We use in: `PaymentModal` to focus close button when modal opens
-- Empty `[]` = run once on mount, `[dep]` = run when dep changes, no array = every render
 
-### useRef
-```ts
-const closeRef = useRef<HTMLButtonElement>(null);
-<button ref={closeRef}>✕</button>
-closeRef.current?.focus();
-```
-- Holds a mutable reference that does NOT cause re-render
-- Two uses: 1) DOM references 2) persisting values between renders
-- We use in: `Sidebar` (tab refs for roving tabindex), `PaymentModal` (focus trap)
-
-### useParams (react-router)
-```ts
-const { id } = useParams<{ id: string }>();
-```
-- Reads URL params from route `/policy/:id`
-- We use in: `PolicyDetail` to find which policy to show
-
-### Interview questions — useState
-- What is the difference between `useState` and a regular variable?
-- Does `setState` update immediately? (No — batched, async)
-- When should you NOT use `useState`? (When multiple components need it → Redux)
-
-### Interview questions — useEffect
-- What is a side effect in React?
-- What is the cleanup function in useEffect?
-- What happens with an empty dependency array `[]`?
-- What is the difference between `useEffect` with and without a dependency array?
-- Why shouldn't you fetch data directly in the component body?
-
-### Interview questions — useRef
-- What is the difference between `useRef` and `useState`?
-- When would you use `useRef` over `useState`?
-- Can you store non-DOM values in useRef? (Yes)
+**Q: Why not fetch data directly in the component body?**
+A: Component body runs on every render. Fetching there means a new request on every re-render — infinite loop.
+> Always put API calls inside `useEffect` with proper dependencies.
 
 ---
 
-## 4. Axios & Interceptors
+## useRef
 
-### What interceptors do
-Run code on every request or response before it reaches your component.
+**Q: Difference between `useRef` and `useState`?**
+A: Both persist between renders. `useState` triggers re-render on update, `useRef` does NOT.
+> `tabRefs.current[i] = el` in `Sidebar` stores DOM nodes — updating it doesn't re-render the component.
 
-### Our pattern (mirrors real ESC codebase)
-```ts
-let pendingRequests = 0;
-
-// Request interceptor
-apiClient.interceptors.request.use(config => {
-  pendingRequests++;
-  store.dispatch(setLoading(true));  // spinner on
-  return config;
-});
-
-// Response interceptor
-apiClient.interceptors.response.use(response => {
-  pendingRequests--;
-  if (pendingRequests === 0) store.dispatch(setLoading(false));  // spinner off
-  return response;
-});
-```
-
-### Why pendingRequests counter, not just true/false?
-If 3 calls fire simultaneously, a boolean would turn off after the first finishes. Counter ensures loading stays true until ALL are done.
-
-### skipLoader header pattern
-```ts
-axios.get('/silent-call', { headers: { skipLoader: true } })
-// interceptor checks: if skipLoader → don't show spinner
-```
-
-### Local JSON dev switch
-```ts
-const USE_LOCAL = import.meta.env.DEV;
-const url = USE_LOCAL ? 'localJson/Payment/PolicyPaymentSearch.json' : 'Payment/PolicyPaymentSearch';
-```
-Dev → serves from `public/localJson/`. Prod → hits real API. No rebuild needed.
-
-### Interview questions
-- What are axios interceptors and what are they used for?
-- How would you show a global loading spinner for all API calls?
-- How do you handle errors globally in axios?
-- What is the difference between axios and fetch?
-- How do you cancel an axios request?
+**Q: When would you use `useRef` over `useState`?**
+A: When you need to store a value or DOM node but don't want a re-render when it changes — focus management, timers, previous values.
+> `closeRef` in `PaymentModal` holds the close button DOM node for focus trap — no need to re-render when it's set.
 
 ---
 
-## 5. React Router v6
+## useEffect vs useLayoutEffect
 
-### Our routes
-```tsx
-<Routes>
-  <Route path="/" element={<Dashboard />} />
-  <Route path="/policy/:id" element={<PolicyDetail />} />
-</Routes>
-```
-
-### Hooks used
-```ts
-useParams()    // read :id from URL
-useNavigate()  // programmatic navigation (Sidebar)
-```
-
-### HashRouter vs BrowserRouter
-| | BrowserRouter | HashRouter |
-|--|--|--|
-| URL | `/policy/123` | `/#/policy/123` |
-| Server needed? | Yes — 404 if server doesn't redirect | No — hash never hits server |
-| We use | HashRouter | GitHub Pages doesn't support server redirects |
-
-### Interview questions
-- What is the difference between `BrowserRouter` and `HashRouter`?
-- How do you pass data between routes?
-- What is `useNavigate`?
-- What is a protected route?
-- How do you read URL parameters in React Router v6?
+**Q: Difference?**
+A: `useEffect` runs asynchronously after paint. `useLayoutEffect` runs synchronously before paint — use for DOM measurements.
+> We use `useEffect` for focus — doesn't need to block the paint.
 
 ---
 
-## 6. Component Patterns Used in PolicyHub
+## Axios & Interceptors
 
-### Controlled components
-Form inputs where React controls the value:
-```tsx
-<input value={cardNumber} onChange={e => setCardNumber(e.target.value)} />
-```
-We use in: `CreditCardForm`, `BankDraftForm`
+**Q: What are axios interceptors?**
+A: Functions that run on every request/response before your code handles them. Used for auth headers, loading state, error handling.
+> Our request interceptor adds `store.dispatch(setLoading(true))` to every API call automatically.
 
-### Compound component pattern
-`PaymentModal` contains `CreditCardForm` and `BankDraftForm` as tabs — modal owns the logic, forms own the UI.
+**Q: Why a `pendingRequests` counter instead of a boolean?**
+A: If 3 calls fire at once, a boolean turns off after the first finishes. Counter waits for all.
+> `pendingRequests++` on each request, `if (pendingRequests === 0) setLoading(false)` on each response.
 
-### Lifting state up
-`AutoPayToggle` receives `checked` from `PolicyDetail` (which reads Redux). Toggle only dispatches — it doesn't read Redux itself.
-
-### Conditional rendering
-```tsx
-if (!isLoading) return null;  // LoadingOverlay
-if (!modalOpen) return null;  // PaymentModal
-```
-Components always mounted in tree, invisible when not needed.
-
-### Interview questions
-- What is a controlled vs uncontrolled component?
-- What is lifting state up?
-- What is prop drilling and how do you avoid it?
-- What is component composition?
-- When would you use `children` prop?
+**Q: Axios vs fetch?**
+A: Axios auto-parses JSON, has interceptors, better error handling (non-2xx throws), works in Node. Fetch is native but needs manual JSON parsing and no interceptors.
 
 ---
 
-## 7. Accessibility (a11y)
+## React Router v6
 
-### What we implemented
-```tsx
-role="tablist" / role="tab" / role="tabpanel"   // Sidebar division navigation
-aria-selected={activeDivision === div}           // current tab
-aria-controls={`panel-${div}`}                  // tab → panel link
-tabIndex={active ? 0 : -1}                      // roving tabindex
-role="dialog" aria-modal="true"                  // PaymentModal
-role="status" aria-live="polite"                 // LoadingOverlay
-```
+**Q: BrowserRouter vs HashRouter?**
+A: BrowserRouter uses real URLs (`/policy/123`) — needs server to redirect 404s. HashRouter uses `/#/policy/123` — hash never hits server, works on static hosting.
+> We use `HashRouter` because GitHub Pages can't redirect 404s to `index.html`.
 
-### Roving tabindex
-Only ONE element is in tab order at a time. Arrow keys move focus between tabs.
-```ts
-ArrowDown → focus next tab, tabIndex = 0
-ArrowUp   → focus prev tab, tabIndex = 0
-All others → tabIndex = -1 (skipped by Tab key)
-```
+**Q: How do you read URL params?**
+A: `useParams()` hook reads `:id` from the route definition.
+> `const { id } = useParams()` in `PolicyDetail` reads the policy ID from `/policy/00A327584`.
 
-### Interview questions
-- What is ARIA?
-- What is the difference between `role` and native HTML elements?
-- What is `aria-label` vs `aria-labelledby`?
-- What is a focus trap and when do you need one?
-- What is roving tabindex?
-- What Lighthouse score indicates good accessibility? (90+)
+**Q: How do you navigate programmatically?**
+A: `const navigate = useNavigate()` then `navigate('/')`.
+> `Sidebar` calls `navigate('/')` after dispatching `setActiveDivision` so the dashboard shows.
 
 ---
 
-## 8. TypeScript in React
+## Component Patterns
 
-### Key concepts we use
-```ts
-interface Policy { ... }          // shape of data
-type Division = 'GL' | 'AI' | ... // union type — only these values
-PayloadAction<string>             // typed Redux action
-TypedUseSelectorHook<RootState>   // typed selector hook
-ReturnType<typeof store.getState> // derive type from value
-```
+**Q: Controlled vs uncontrolled component?**
+A: Controlled = React owns the value via `useState`. Uncontrolled = DOM owns it, accessed via `ref`.
+> `<input value={cardNumber} onChange={e => setCardNumber(e.target.value)} />` = controlled. We use controlled everywhere in payment forms.
 
-### Interview questions
-- What is the difference between `interface` and `type`?
-- What is a union type?
-- What is a generic? (`Array<T>`, `PayloadAction<T>`)
-- What is `ReturnType`?
-- What is `typeof`?
+**Q: What is lifting state up?**
+A: Moving state to the nearest common parent so multiple children can share it.
+> `PolicyDetail` reads `policy.autoPay` from Redux and passes it as `checked` prop to `AutoPayToggle`. Toggle dispatches back up.
+
+**Q: What is prop drilling?**
+A: Passing props through many layers of components that don't use them, just to reach a deep child. Redux solves this.
 
 ---
 
-## Topics Still to Cover (as we build)
+## Accessibility (a11y)
 
-- [ ] React lifecycle (mounting, updating, unmounting)
-- [ ] useMemo and useCallback (performance)
-- [ ] React.memo — when to use
-- [ ] Context API vs Redux — when to use which
-- [ ] Storybook — Phase 4
-- [ ] Jest + React Testing Library — Phase 4
-- [ ] Virtual DOM — how React reconciliation works
+**Q: What is ARIA?**
+A: Attributes that add semantic meaning to HTML for screen readers when native elements aren't enough.
+> `role="tablist"`, `aria-selected`, `aria-controls` on our sidebar tabs — a `<button>` styled as a tab needs these.
+
+**Q: What is roving tabindex?**
+A: Only one element in a group is in tab order (`tabIndex=0`) at a time. Arrow keys move focus between them. Used for menus, tabs, toolbars.
+> Our `Sidebar` — active tab is `tabIndex=0`, all others are `tabIndex=-1`. Arrow Up/Down moves between them.
+
+**Q: What is a focus trap?**
+A: Keeping keyboard focus inside a modal while it's open so Tab doesn't escape to background content.
+> `PaymentModal` focuses the close button on open. A full trap would also intercept Tab/Shift+Tab.
+
+---
+
+## TypeScript
+
+**Q: interface vs type?**
+A: Both define shapes. `interface` is extendable (can `extend` or `implements`). `type` can be a union/intersection.
+> `interface Policy { id: string; ... }` for object shapes. `type Division = 'GL' | 'AI' | ...` for unions.
+
+**Q: What is a union type?**
+A: A value that can be one of several specific types.
+> `type PaymentStatus = 'idle' | 'processing' | 'success' | 'error'` — only these 4 strings are valid.
+
+**Q: What is a generic?**
+A: A placeholder type that gets filled in when used.
+> `PayloadAction<string>` — the action payload is typed as string. `PayloadAction<boolean>` — payload is boolean.
+
+---
+
+## Topics Still to Add
+
+- [ ] useMemo — memoize expensive calculations
+- [ ] useCallback — memoize functions passed as props
+- [ ] React.memo — prevent re-render if props unchanged
+- [ ] Context API vs Redux
+- [ ] Virtual DOM & reconciliation
 - [ ] Keys in lists — why they matter
 - [ ] Error boundaries
-- [ ] Lazy loading / code splitting
-- [ ] React 18 features (Concurrent Mode, Suspense)
-- [ ] CSS Modules vs styled-components vs Tailwind
-- [ ] Performance profiling with React DevTools
+- [ ] Lazy loading / React.lazy / Suspense
+- [ ] React 18 — Concurrent Mode, automatic batching
+- [ ] Jest + RTL — Phase 4
+- [ ] Storybook — Phase 4
 
 ---
 
-*Last updated: Phase 3 complete — Redux, Hooks, Axios, Router, Accessibility, TypeScript*
+*Updated: Phase 3 — Redux, Hooks, Axios, Router, a11y, TypeScript*
