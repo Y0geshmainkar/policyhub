@@ -1,5 +1,7 @@
 @use './styles/tokens' as *;
 
+$breakpoint: 640px;
+
 .layout {
   display: flex;
   height: 100vh;
@@ -10,4 +12,8 @@
   display: flex;
   flex: 1;
   overflow: hidden;
+
+  @media (max-width: $breakpoint) {
+    flex-direction: column;
+  }
 }

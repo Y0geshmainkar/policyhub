@@ -1,9 +1,15 @@
 @use '../../styles/tokens' as *;
 
+$breakpoint: 640px;
+
 .panel {
   flex: 1;
   padding: $space-xl;
   overflow-y: auto;
+
+  @media (max-width: $breakpoint) {
+    padding: $space-md;
+  }
 }
 
 .heading {
@@ -19,6 +25,11 @@
     margin-left: $space-sm;
     font-weight: 400;
   }
+
+  @media (max-width: $breakpoint) {
+    font-size: 20px;
+    margin-bottom: $space-md;
+  }
 }
 
 .grid {
@@ -29,6 +40,11 @@
   > * {
     flex: 1 1 260px;
     max-width: 340px;
+
+    @media (max-width: $breakpoint) {
+      flex: 1 1 100%;
+      max-width: 100%;
+    }
   }
 }
 

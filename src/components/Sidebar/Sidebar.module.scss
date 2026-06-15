@@ -1,12 +1,22 @@
 @use '../../styles/tokens' as *;
 @use 'sass:color';
 
+$breakpoint: 640px;
+
 .sidebar {
   width: $sidebar-width;
-  background: color.adjust($navy, $lightness: -4%);
+  background: darken($navy, 4%);
   padding-top: $space-lg;
   flex-shrink: 0;
   overflow-y: auto;
+
+  @media (max-width: $breakpoint) {
+    width: 100%;
+    padding-top: 0;
+    overflow-y: visible;
+    overflow-x: auto;
+    border-bottom: 2px solid rgba($parchment, 0.1);
+  }
 }
 
 .tabList {
@@ -16,6 +26,12 @@
   display: flex;
   flex-direction: column;
   gap: 2px;
+
+  @media (max-width: $breakpoint) {
+    flex-direction: row;
+    gap: 0;
+    white-space: nowrap;
+  }
 }
 
 .tab {
@@ -33,6 +49,7 @@
   border-radius: 4px 0 0 4px;
   transition: background 0.15s, color 0.15s;
   user-select: none;
+  white-space: nowrap;
 
   &:hover {
     color: $parchment;
@@ -45,9 +62,18 @@
     font-weight: 600;
     box-shadow: 2px 0 0 $gold inset;
 
-    .code {
-      color: $gold;
+    .code { color: $gold; }
+
+    @media (max-width: $breakpoint) {
+      box-shadow: 0 -2px 0 $gold inset;
+      border-radius: 0;
     }
+  }
+
+  @media (max-width: $breakpoint) {
+    width: auto;
+    border-radius: 0;
+    padding: $space-sm $space-md;
   }
 }
 
