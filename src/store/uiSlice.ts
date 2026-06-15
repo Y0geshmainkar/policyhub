@@ -1,12 +1,12 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
+// isLoading removed — TanStack Query's useIsFetching/isPending handles server state loading
+// uiSlice now owns only pure UI state
 interface UiState {
-  isLoading: boolean;
   loadingMessage: string;
 }
 
 const initialState: UiState = {
-  isLoading: false,
   loadingMessage: '',
 };
 
@@ -14,14 +14,11 @@ const uiSlice = createSlice({
   name: 'ui',
   initialState,
   reducers: {
-    setLoading(state, action: PayloadAction<boolean>) {
-      state.isLoading = action.payload;
-    },
     setLoadingMessage(state, action: PayloadAction<string>) {
       state.loadingMessage = action.payload;
     },
   },
 });
 
-export const { setLoading, setLoadingMessage } = uiSlice.actions;
+export const { setLoadingMessage } = uiSlice.actions;
 export default uiSlice.reducer;
