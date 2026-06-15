@@ -191,6 +191,150 @@ A: A placeholder type that gets filled in when used.
 
 ---
 
+## 9. Testing — Jest + React Testing Library
+
+### What we have: 65 tests across 5 suites
+```
+normalizers.test.ts      — 25 assertions, all 4 normalizer adapters + API shape
+policiesSlice.test.ts    — 7 tests, reducer actions + edge cases
+paymentSlice.test.ts     — 8 tests, full payment state machine
+components.test.tsx      — 8 RTL tests, PolicyCard + StatusBadge
+CreditCardForm.test.tsx  — 7 RTL tests, validation + formatting
+```
+
+### Three kinds of tests we write
+
+**1. Pure unit tests — reducers and normalizers**
+No React, no mocking, just functions in → out:
+```ts
+test('setActiveDivision', () => {
+  expect(reducer(initial, setActiveDivision('AI')).activeDivision).toBe('AI');
+});
+```
+> Best for: Redux slices, normalizers, utility functions
+
+**2. RTL component tests — test behavior, not HTML**
+```ts
+it('renders insured name', () => {
+  renderWithProviders(<PolicyCard policy={basePolicy} />);
+  expect(screen.getByText('NOVOKUS, ISABELLE')).toBeInTheDocument();
+});
+```
+> Key principle: use `getByText`, `getByRole`, `getByLabelText` — NOT `getByClassName`
+> If your test would pass even if the label text was wrong, it's testing the wrong thing.
+
+**3. User interaction tests — fireEvent / userEvent**
+```ts
+await userEvent.type(screen.getByPlaceholderText('JOHN SMITH'), 'JOHN SMITH');
+fireEvent.click(screen.getByRole('button', { name: /pay now/i }));
+expect(onSubmit).toHaveBeenCalledTimes(1);
+```
+> Tests the full user journey: type → submit → callback fired
+
+### renderWithProviders — why we need it
+Components that use `useAppSelector` or `useNavigate` crash in tests without their providers.
+We wrap them:
+```ts
+function renderWithProviders(ui: ReactElement) {
+  return render(
+    <Provider store={store}>
+      <MemoryRouter>{ui}</MemoryRouter>
+    </Provider>
+  );
+}
+```
+
+### Interview questions
+
+**Q: What is React Testing Library? How is it different from Enzyme?**
+A: RTL tests from the user's perspective — what's visible and interactive. Enzyme let you test implementation details (component state, methods). RTL's philosophy: if a refactor doesn't change behavior, tests shouldn't break.
+> We use `screen.getByText('Active')` not `wrapper.find('.badge').prop('className')`.
+
+**Q: What is the difference between `getBy`, `queryBy`, `findBy`?**
+A: `getBy` — throws if not found (use when element must exist). `queryBy` — returns null if not found (use for "should NOT exist" checks). `findBy` — async, waits for element to appear.
+> `expect(screen.queryByText('AutoPay ON')).not.toBeInTheDocument()` — checking absence uses `queryBy`.
+
+**Q: What does `userEvent` do that `fireEvent` doesn't?**
+A: `userEvent` simulates real browser behavior — typing triggers multiple events (keydown, keypress, input, keyup). `fireEvent.change` fires only one event. Use `userEvent` for realistic tests.
+> `userEvent.type(input, '4111...')` triggers formatting logic. `fireEvent.change` bypasses it.
+
+**Q: Should you test implementation details?**
+A: No. Test what the user sees, not how the component is built internally. If you rename a CSS class or move state from component to Redux, tests should still pass.
+> Our tests check `screen.getByText('Payment Due')` not `element.className.includes('due')`.
+
+**Q: What is mocking and when do you use it?**
+A: Replacing a real dependency with a fake one in tests. Use for: API calls, timers, external modules.
+> `jest.fn()` creates a mock function. We pass `onSubmit={jest.fn()}` to `CreditCardForm` and check `expect(onSubmit).toHaveBeenCalledTimes(1)`.
+
+**Q: What is `jest.fn()` vs `jest.spyOn()`?**
+A: `jest.fn()` creates a brand new mock function. `jest.spyOn(obj, 'method')` wraps an existing method to track calls but keeps the original behavior (unless you mock the return value).
+
+**Q: What does `toBeInTheDocument()` check?**
+A: That the element exists in the DOM. It's from `@testing-library/jest-dom` — an extension to Jest's matchers. Without that import, you'd have to use `expect(el).not.toBeNull()`.
+
+---
+
+## 10. Storybook
+
+### What it is
+An isolated environment to build and view components individually — without running the full app.
+
+### What we have
+```
+PolicyCard.stories.tsx   → Active, PaymentDue, Lapsed
+StatusBadge.stories.tsx  → Active, Due, Lapsed
+AutoPayToggle.stories.tsx→ On, Off
+PaymentModal.stories.tsx → CreditCard, BankDraft, SuccessState, ErrorState
+```
+Run with: `npm run storybook` → opens at `localhost:6006`
+
+### Story structure
+```ts
+// Every story = one state of a component
+export const Active: Story = {
+  args: { policy: { ...base, status: 'active' } },
+};
+export const PaymentDue: Story = {
+  args: { policy: { ...base, status: 'due' } },
+};
+```
+`args` = the props. Storybook renders the component with those props and lets you tweak them live in the UI.
+
+### Decorators — global providers
+Our preview wraps every story with Redux + Router so components work:
+```tsx
+decorators: [
+  Story => (
+    <Provider store={store}>
+      <MemoryRouter><Story /></MemoryRouter>
+    </Provider>
+  )
+]
+```
+> Same problem as `renderWithProviders` in tests — solved the same way.
+
+### Interview questions
+
+**Q: What is Storybook and why use it?**
+A: A component development environment. You build and test components in isolation, without the full app. Used for: design system development, visual QA, documentation.
+> In PolicyHub: a designer can see all 3 status states of `PolicyCard` side by side without logging in.
+
+**Q: What is a story?**
+A: A single visual state of a component. One component can have many stories — one per meaningful state.
+> `StatusBadge` has 3 stories: `Active`, `Due`, `Lapsed`.
+
+**Q: What is `args` in a story?**
+A: Props passed to the component. Storybook renders `<Component {...args} />` and displays controls to change them live.
+
+**Q: What is a decorator in Storybook?**
+A: A wrapper applied to stories — same concept as HOC or wrapper component. Used to provide context (Redux, Router, theme) that components need.
+> Our global decorator wraps every story in `<Provider store={store}>`.
+
+**Q: How does Storybook differ from unit tests?**
+A: Storybook = visual, for humans to review. Unit tests = automated assertions, for CI. They're complementary — Storybook catches visual regressions, tests catch logic regressions.
+
+---
+
 ## Topics Still to Add
 
 - [ ] useMemo — memoize expensive calculations
@@ -202,9 +346,7 @@ A: A placeholder type that gets filled in when used.
 - [ ] Error boundaries
 - [ ] Lazy loading / React.lazy / Suspense
 - [ ] React 18 — Concurrent Mode, automatic batching
-- [ ] Jest + RTL — Phase 4
-- [ ] Storybook — Phase 4
 
 ---
 
-*Updated: Phase 3 — Redux, Hooks, Axios, Router, a11y, TypeScript*
+*Updated: Phase 4 — Testing (Jest + RTL) and Storybook added*

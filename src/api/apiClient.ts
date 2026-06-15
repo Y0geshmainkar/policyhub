@@ -2,12 +2,15 @@ import axios from 'axios';
 import { store } from '../store';
 import { setLoading } from '../store/uiSlice';
 
-const USE_LOCAL = import.meta.env.DEV;
+// Use local JSON when in dev OR when deployed to GitHub Pages (no real API)
+const isGitHubPages = typeof window !== 'undefined' &&
+  window.location.hostname.includes('github.io');
+const USE_LOCAL = import.meta.env.DEV || isGitHubPages;
 
 // In dev, axios calls resolve against /localJson/ (Vite serves public/)
 // In prod, calls go to a real baseURL
 export const apiClient = axios.create({
-  baseURL: USE_LOCAL ? '/' : '/api/',
+  baseURL: USE_LOCAL ? (import.meta.env.BASE_URL || '/') : '/api/',
   headers: { 'Content-Type': 'application/json' },
 });
 
