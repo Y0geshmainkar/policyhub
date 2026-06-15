@@ -1,30 +1,19 @@
 @use '../../styles/tokens' as *;
 @use 'sass:color';
 
-$breakpoint: 640px;
-
 .sidebar {
   width: $sidebar-width;
+  height: 100%;
+  max-height: 100%;
   background: $white;
   border-right: 1px solid $border-color;
-  padding-top: $space-md;
-  flex-shrink: 0;
+  padding-top: $space-sm;
   overflow-y: auto;
+  overflow-x: hidden;
   display: flex;
   flex-direction: column;
-
-  @media (max-width: $breakpoint) {
-    width: 100%;
-    padding-top: 0;
-    flex-direction: row;
-    overflow-y: visible;
-    overflow-x: auto;
-    border-right: none;
-    border-bottom: 1px solid $border-color;
-  }
 }
 
-// Section label like "INSURANCE" in TallyPrime
 .sectionLabel {
   font-size: 10px;
   font-weight: 700;
@@ -33,10 +22,6 @@ $breakpoint: 640px;
   color: $slate-mid;
   padding: $space-sm $space-md $space-xs;
   margin-top: $space-sm;
-
-  @media (max-width: $breakpoint) {
-    display: none;
-  }
 }
 
 .tabList {
@@ -46,12 +31,6 @@ $breakpoint: 640px;
   display: flex;
   flex-direction: column;
   gap: 1px;
-
-  @media (max-width: $breakpoint) {
-    flex-direction: row;
-    padding: 0;
-    gap: 0;
-  }
 }
 
 .tab {
@@ -59,7 +38,7 @@ $breakpoint: 640px;
   align-items: center;
   gap: 10px;
   cursor: pointer;
-  padding: 9px $space-md;
+  padding: 10px $space-md;
   font-family: $font-sans;
   font-size: 13px;
   font-weight: 500;
@@ -77,29 +56,17 @@ $breakpoint: 640px;
     color: $dark;
   }
 
-  // Active: light orange bg + orange text + left orange bar (TallyPrime pattern)
   &[aria-selected='true'] {
     background: rgba($orange, 0.08);
     color: $orange;
     font-weight: 600;
     box-shadow: inset 3px 0 0 $orange;
 
-    .code   { color: $orange; }
-    .icon   { color: $orange; }
-
-    @media (max-width: $breakpoint) {
-      box-shadow: none;
-      border-bottom: 2px solid $orange;
-      background: rgba($orange, 0.06);
-      border-radius: 0;
-    }
+    .code  { color: $orange; }
+    .icon  { color: $orange; }
   }
 
-  @media (max-width: $breakpoint) {
-    width: auto;
-    border-radius: 0;
-    padding: $space-sm $space-md;
-  }
+  &:focus-visible { outline: $focus-outline; outline-offset: $focus-outline-offset; }
 }
 
 .icon {
@@ -119,7 +86,5 @@ $breakpoint: 640px;
 }
 
 .label {
-  @media (max-width: $breakpoint) {
-    display: none;
-  }
+  // always visible — no mobile-only hide needed (drawer handles mobile now)
 }

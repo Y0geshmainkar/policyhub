@@ -6,7 +6,11 @@ import { setActiveDivision } from '../../store/policiesSlice';
 import { DIVISION_ICONS } from '../icons/Icons';
 import styles from './Sidebar.module.scss';
 
-export function Sidebar() {
+interface Props {
+  onSelect?: () => void;
+}
+
+export function Sidebar({ onSelect }: Props) {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const activeDivision = useAppSelector(s => s.policies.activeDivision);
@@ -15,6 +19,7 @@ export function Sidebar() {
   const handleSelect = (div: Division) => {
     dispatch(setActiveDivision(div));
     navigate('/');
+    onSelect?.();
   };
 
   const handleKeyDown = (e: KeyboardEvent, index: number) => {
