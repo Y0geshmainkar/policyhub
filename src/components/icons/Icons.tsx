@@ -1,5 +1,23 @@
 // All SVGs inline — no external image dependency
 
+export const CreditCardIcon = ({ size = 18 }: { size?: number }) => (
+  <svg width={size} height={size} viewBox="0 0 20 20" fill="none" aria-hidden="true">
+    <rect x="2" y="5" width="16" height="11" rx="2" stroke="currentColor" strokeWidth="1.5" fill="none"/>
+    <path d="M2 8.5h16" stroke="currentColor" strokeWidth="1.5"/>
+    <rect x="4" y="11" width="4" height="1.5" rx="0.75" fill="currentColor"/>
+  </svg>
+);
+
+export const BankIcon = ({ size = 18 }: { size?: number }) => (
+  <svg width={size} height={size} viewBox="0 0 20 20" fill="none" aria-hidden="true">
+    <path d="M10 2.5L17 6H3L10 2.5z" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round" fill="none"/>
+    <rect x="4" y="9" width="2" height="6" rx="0.5" fill="currentColor" opacity="0.8"/>
+    <rect x="9" y="9" width="2" height="6" rx="0.5" fill="currentColor" opacity="0.8"/>
+    <rect x="14" y="9" width="2" height="6" rx="0.5" fill="currentColor" opacity="0.8"/>
+    <path d="M3 15.5h14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+  </svg>
+);
+
 export const LogoIcon = () => (
   <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
     <circle cx="14" cy="14" r="13" fill="#F58220" />

@@ -57,7 +57,6 @@ export function BankDraftForm({ onSubmit, disabled }: { onSubmit: (v: BankFormVa
           onChange={ev => set('accountType', ev.target.value)} />
       </FormField>
 
-      <div style={{ display: 'flex', gap: 12 }}>
         <FormField label="First Name" required error={e.firstName}>
           <Input placeholder="First" maxLength={30} value={v.firstName} error={!!e.firstName}
             onChange={ev => set('firstName', ev.target.value)} />
@@ -66,7 +65,6 @@ export function BankDraftForm({ onSubmit, disabled }: { onSubmit: (v: BankFormVa
           <Input placeholder="Last" maxLength={30} value={v.lastName} error={!!e.lastName}
             onChange={ev => set('lastName', ev.target.value)} />
         </FormField>
-      </div>
 
       <FormField label="Routing Number" required error={e.routingNumber}>
         <Input placeholder="9-digit routing number" inputMode="numeric" maxLength={9} mono

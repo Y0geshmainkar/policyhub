@@ -52,16 +52,15 @@ export function CreditCardForm({ onSubmit, disabled }: { onSubmit: (v: CCFormVal
           onChange={ev => set('cardNumber', formatCardNumber(ev.target.value))} />
       </FormField>
 
-      <div style={{ display: 'flex', gap: 12 }}>
-        <FormField label="Expiry (MM/YY)" required error={e.expiry}>
-          <Input placeholder="MM/YY" inputMode="numeric" maxLength={5} mono error={!!e.expiry}
-            value={v.expiry} onChange={ev => set('expiry', formatExpiry(ev.target.value))} />
-        </FormField>
-        <FormField label="CVV" required error={e.cvv}>
-          <Input type="password" inputMode="numeric" placeholder="•••" maxLength={4} mono error={!!e.cvv}
-            value={v.cvv} onChange={ev => set('cvv', ev.target.value.replace(/\D/g, '').slice(0, 4))} />
-        </FormField>
-      </div>
+
+      <FormField label="Expiry (MM/YY)" required error={e.expiry}>
+        <Input placeholder="MM/YY" inputMode="numeric" maxLength={5} mono error={!!e.expiry}
+          value={v.expiry} onChange={ev => set('expiry', formatExpiry(ev.target.value))} />
+      </FormField>
+      <FormField label="CVV" required error={e.cvv}>
+        <Input type="password" inputMode="numeric" placeholder="•••" maxLength={4} mono error={!!e.cvv}
+          value={v.cvv} onChange={ev => set('cvv', ev.target.value.replace(/\D/g, '').slice(0, 4))} />
+      </FormField>
 
       <Button type="submit" full disabled={disabled}>Pay Now</Button>
     </form>
