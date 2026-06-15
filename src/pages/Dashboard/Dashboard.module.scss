@@ -1,0 +1,38 @@
+@use '../../styles/tokens' as *;
+
+.panel {
+  flex: 1;
+  padding: $space-xl;
+  overflow-y: auto;
+}
+
+.heading {
+  font-family: $font-serif;
+  font-size: 24px;
+  color: $navy;
+  margin-bottom: $space-lg;
+
+  span {
+    font-family: $font-mono;
+    font-size: 16px;
+    color: $slate;
+    margin-left: $space-sm;
+    font-weight: 400;
+  }
+}
+
+.grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $space-md;
+
+  > * {
+    flex: 1 1 260px;
+    max-width: 340px;
+  }
+}
+
+.empty {
+  color: $slate;
+  font-style: italic;
+}

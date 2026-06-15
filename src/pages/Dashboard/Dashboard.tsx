@@ -1,0 +1,30 @@
+import { useAppSelector } from '../../store/hooks';
+import { DIVISION_NAMES } from '../../types/policy';
+import { PolicyCard } from '../../components/PolicyCard/PolicyCard';
+import styles from './Dashboard.module.scss';
+
+export function Dashboard() {
+  const { policies, activeDivision } = useAppSelector(s => s.policies);
+  const filtered = policies.filter(p => p.division === activeDivision);
+
+  return (
+    <main
+      id={`panel-${activeDivision}`}
+      role="tabpanel"
+      aria-labelledby={`tab-${activeDivision}`}
+      className={styles.panel}
+    >
+      <h1 className={styles.heading}>
+        {DIVISION_NAMES[activeDivision]}
+        <span>({activeDivision})</span>
+      </h1>
+      <div className={styles.grid}>
+        {filtered.length === 0 ? (
+          <p className={styles.empty}>No policies in this division.</p>
+        ) : (
+          filtered.map(p => <PolicyCard key={p.id} policy={p} />)
+        )}
+      </div>
+    </main>
+  );
+}

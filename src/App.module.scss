@@ -1,0 +1,13 @@
+@use './styles/tokens' as *;
+
+.layout {
+  display: flex;
+  height: 100vh;
+  padding-top: $header-height;
+}
+
+.content {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}

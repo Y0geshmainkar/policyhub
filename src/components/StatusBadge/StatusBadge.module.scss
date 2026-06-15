@@ -1,0 +1,25 @@
+@use '../../styles/tokens' as *;
+@use 'sass:color';
+
+.badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+
+  &.active {
+    background: color.adjust($forest, $lightness: 50%);
+    color: $forest;
+  }
+  &.due {
+    background: color.adjust($rust, $lightness: 38%);
+    color: $rust;
+  }
+  &.lapsed {
+    background: color.adjust($slate, $lightness: 42%);
+    color: $slate;
+  }
+}

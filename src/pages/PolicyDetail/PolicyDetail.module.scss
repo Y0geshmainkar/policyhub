@@ -1,0 +1,82 @@
+@use '../../styles/tokens' as *;
+@use 'sass:color';
+
+.page {
+  flex: 1;
+  padding: $space-xl;
+  overflow-y: auto;
+}
+
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: $space-xs;
+  color: $slate;
+  font-size: 13px;
+  text-decoration: none;
+  margin-bottom: $space-lg;
+
+  &:hover { color: $navy; }
+}
+
+.card {
+  background: $paper;
+  border-radius: 8px;
+  padding: $space-xl;
+  max-width: 600px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
+
+.id {
+  font-family: $font-mono;
+  font-size: 13px;
+  color: $slate;
+  margin-bottom: $space-sm;
+}
+
+.title {
+  font-family: $font-serif;
+  font-size: 26px;
+  color: $navy;
+  margin-bottom: $space-md;
+}
+
+.rows {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: $space-sm $space-md;
+  margin-top: $space-md;
+}
+
+.label {
+  color: $slate;
+  font-size: 13px;
+}
+
+.value {
+  font-size: 14px;
+  font-weight: 500;
+
+  &.mono {
+    font-family: $font-mono;
+    color: $gold;
+    font-size: 16px;
+  }
+}
+
+.sourceBadge {
+  display: inline-block;
+  margin-top: $space-lg;
+  font-family: $font-mono;
+  font-size: 11px;
+  background: color.adjust($navy, $lightness: 60%);
+  color: $navy;
+  padding: 3px 8px;
+  border-radius: 4px;
+  letter-spacing: 0.05em;
+}
+
+.notFound {
+  color: $slate;
+  font-style: italic;
+}

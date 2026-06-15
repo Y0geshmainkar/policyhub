@@ -1,0 +1,62 @@
+@use '../../styles/tokens' as *;
+@use 'sass:color';
+
+.sidebar {
+  width: $sidebar-width;
+  background: color.adjust($navy, $lightness: -4%);
+  padding-top: $space-lg;
+  flex-shrink: 0;
+  overflow-y: auto;
+}
+
+.tabList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.tab {
+  position: relative;
+  cursor: pointer;
+  padding: $space-sm $space-md $space-sm ($space-md + 4px);
+  font-family: $font-sans;
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba($parchment, 0.7);
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+  border-radius: 4px 0 0 4px;
+  transition: background 0.15s, color 0.15s;
+  user-select: none;
+
+  &:hover {
+    color: $parchment;
+    background: rgba($parchment, 0.08);
+  }
+
+  &[aria-selected='true'] {
+    background: $parchment;
+    color: $navy;
+    font-weight: 600;
+    box-shadow: 2px 0 0 $gold inset;
+
+    .code {
+      color: $gold;
+    }
+  }
+}
+
+.code {
+  font-family: $font-mono;
+  font-size: 11px;
+  font-weight: 500;
+  margin-right: $space-xs;
+  color: rgba($parchment, 0.5);
+  display: inline-block;
+  min-width: 22px;
+}
