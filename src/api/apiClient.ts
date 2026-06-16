@@ -29,3 +29,14 @@ export const schedulePaymentBank = (payload: unknown) => {
   }
   return apiClient.post('Payment/ScheduleOneTimePaymentBank', payload);
 };
+
+// ── Auth API calls ─────────────────────────────────────────────────────────
+
+export const registerUser = (payload: unknown) => {
+  if (USE_LOCAL) {
+    return new Promise<{ data: unknown }>(resolve =>
+      setTimeout(() => apiClient.get('localJson/Auth/Register.json').then(resolve), 800)
+    );
+  }
+  return apiClient.post('Auth/Register', payload);
+};
